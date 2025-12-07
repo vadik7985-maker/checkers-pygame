@@ -265,3 +265,116 @@ class CheckersGame:
             self.captured_pieces_to_highlight = []
             simple_moves = self.get_simple_moves_for_piece(row, col, piece)
             return [(mr, mc, []) for mr, mc in simple_moves]
+   
+    def move_piece(self, from_row, from_col, to_row, to_col):
+        piece = self.board[from_row][from_col]
+
+        # Проверяем, является ли ход допустимым
+        valid_move = False
+        captured_pieces = []
+
+        for move in self.valid_moves:
+            if move[0] == to_row and move[1] == to_col:
+                valid_move = True
+                captured_pieces = move[2]
+                break
+
+        if not valid_move:
+            return False
+
+        # Сохраняем ход в историю
+        self.move_history.append({
+            'from': (from_row, from_col),
+            'to': (to_row, to_col),
+            'captured': captured_pieces,
+            'piece': piece
+        })
+
+        # Выполняем ход
+        self.board[to_row][to_col] = piece
+        self.board[from_row][from_col] = None
+
+        # Удаляем все взятые шашки
+        for r, c in captured_pieces:
+            self.board[r][c] = None
+
+        # Проверяем превращение в дамку
+        if piece.type == PieceType.MAN:
+            if piece.player == Player.WHITE and to_row == 0:
+                piece.type = PieceType.KING
+            elif piece.player == Player.BLACK and to_row == BOARD_SIZE - 1:
+                piece.type = PieceType.KING
+
+        # Проверяем возможность дальнейшего взятия
+        if captured_pieces:
+            further_captures = self.get_captures_for_piece(to_row, to_col, piece)
+
+            # Фильтруем только те взятия, которые берут новые шашки
+            valid_further = []
+            for fr, fc, capt in further_captures:
+                # Проверяем, что это новые шашки (не те, что уже взяты)
+                new_captures = [c for c in capt if c not in captured_pieces]
+                if new_captures:
+                    valid_further.append((fr, fc, capt))
+
+            if valid_further:
+                # Находим максимальное количество дополнительных взятий
+                max_further = max(len(capt) for _, _, capt in valid_further)
+                best_further = [(fr, fc, capt) for fr, fc, capt in valid_further if len(capt) == max_further]
+
+                if best_further:
+                    # Продолжаем множественное взятие
+                    self.multiple_capture = True
+                    self.selected_piece = (to_row, to_col)
+                    self.valid_moves = best_further
+                    # Обновляем подсветку шашек для взятия
+                    self.captured_pieces_to_highlight = []
+                    for _, _, captured in best_further:
+                        for r, c in captured:
+                            if (r, c) not in self.captured_pieces_to_highlight:
+                                self.captured_pieces_to_highlight.append((r, c))
+                    return True
+
+        # Если множественное взятие закончено или его не было
+        self.multiple_capture = False
+        self.current_player = Player.BLACK if self.current_player == Player.WHITE else Player.WHITE
+        self.selected_piece = None
+        self.valid_moves = []
+        self.captured_pieces_to_highlight = []
+
+        # Проверка на конец игры
+        self.check_game_over()
+
+        return True
+
+    def check_game_over(self):
+        white_pieces = 0
+        black_pieces = 0
+
+        for row in range(BOARD_SIZE):
+            for col in range(BOARD_SIZE):
+                piece = self.board[row][col]
+                if piece:
+                    if piece.player == Player.WHITE:
+                        white_pieces += 1
+                    else:
+                        black_pieces += 1
+
+        # Проверяем наличие ходов у текущего игрока
+        current_player_has_moves = False
+        for row in range(BOARD_SIZE):
+            for col in range(BOARD_SIZE):
+                piece = self.board[row][col]
+                if piece and piece.player == self.current_player:
+                    if self.get_valid_moves(row, col):
+                        current_player_has_moves = True
+                        break
+            if current_player_has_moves:
+                break
+
+        if white_pieces == 0 or (self.current_player == Player.WHITE and not current_player_has_moves):
+            self.game_over = True
+            self.winner = Player.BLACK
+        elif black_pieces == 0 or (self.current_player == Player.BLACK and not current_player_has_moves):
+            self.game_over = True
+            self.winner = Player.WHITE
