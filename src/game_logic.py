@@ -225,3 +225,43 @@ class CheckersGame:
                     moves.append((new_row, new_col))
 
         return moves
+
+    def get_valid_moves(self, row, col):
+        """Получить допустимые ходы для выбранной шашки"""
+        piece = self.get_piece(row, col)
+        if not piece or piece.player != self.current_player:
+            return []
+
+        # Проверяем, есть ли обязательные взятия у всего игрока
+        all_captures = self.get_all_possible_captures(self.current_player)
+
+        if all_captures:
+            # Находим максимальное количество взятий
+            max_captures = 0
+            for _, _, _, _, captured in all_captures:
+                if len(captured) > max_captures:
+                    max_captures = len(captured)
+
+            # Фильтруем только ходы с максимальным количеством взятий
+            best_captures = []
+            for fr, fc, tr, tc, captured in all_captures:
+                if fr == row and fc == col and len(captured) == max_captures:
+                    # Собираем шашки, которые будут взяты
+                    captured_coords = captured
+                    best_captures.append((tr, tc, captured_coords))
+
+            if best_captures:
+                # Сохраняем шашки для подсветки
+                self.captured_pieces_to_highlight = []
+                for _, _, captured in best_captures:
+                    for r, c in captured:
+                        if (r, c) not in self.captured_pieces_to_highlight:
+                            self.captured_pieces_to_highlight.append((r, c))
+                return best_captures
+            else:
+                return []
+        else:
+            # Нет взятий - показываем простые ходы
+            self.captured_pieces_to_highlight = []
+            simple_moves = self.get_simple_moves_for_piece(row, col, piece)
+            return [(mr, mc, []) for mr, mc in simple_moves]
