@@ -44,4 +44,23 @@ class CheckersGUI:
         # Эффекты
         self.pulse_value = 0
         self.last_pulse_time = 0
-        
+
+    def draw_gradient_rect(self, rect, color1, color2, vertical=True):
+        if vertical:
+            for y in range(rect.height):
+                ratio = y / rect.height
+                r = int(color1[0] + (color2[0] - color1[0]) * ratio)
+                g = int(color1[1] + (color2[1] - color1[1]) * ratio)
+                b = int(color1[2] + (color2[2] - color1[2]) * ratio)
+                pygame.draw.line(self.screen, (r, g, b),
+                                 (rect.x, rect.y + y),
+                                 (rect.x + rect.width, rect.y + y))
+        else:
+            for x in range(rect.width):
+                ratio = x / rect.width
+                r = int(color1[0] + (color2[0] - color1[0]) * ratio)
+                g = int(color1[1] + (color2[1] - color1[1]) * ratio)
+                b = int(color1[2] + (color2[2] - color1[2]) * ratio)
+                pygame.draw.line(self.screen, (r, g, b),
+                                 (rect.x + x, rect.y),
+                                 (rect.x + x, rect.y + rect.height))
