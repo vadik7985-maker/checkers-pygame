@@ -378,3 +378,58 @@ class CheckersGame:
         elif black_pieces == 0 or (self.current_player == Player.BLACK and not current_player_has_moves):
             self.game_over = True
             self.winner = Player.WHITE
+
+    def handle_click(self, row, col):
+        if self.game_over:
+            return
+
+        piece = self.get_piece(row, col)
+
+        if self.selected_piece:
+            # Пытаемся сделать ход
+            if self.move_piece(self.selected_piece[0], self.selected_piece[1], row, col):
+                return
+            else:
+                # Если ход не удался, снимаем выделение
+                self.selected_piece = None
+                self.valid_moves = []
+                self.captured_pieces_to_highlight = []
+
+        # Проверяем, есть ли обязательные взятия у текущего игрока
+        all_captures = self.get_all_possible_captures(self.current_player)
+
+        if all_captures:
+            # Есть обязательные взятия - можно выбрать только шашки, которые могут бить
+            if piece and piece.player == self.current_player:
+                # Проверяем, может ли эта шашка бить
+                piece_captures = []
+                for fr, fc, tr, tc, captured in all_captures:
+                    if fr == row and fc == col:
+                        piece_captures.append((tr, tc, captured))
+
+                if piece_captures:
+                    self.selected_piece = (row, col)
+                    # Находим максимальное количество взятий
+                    max_captures = 0
+                    for _, _, captured in piece_captures:
+                        if len(captured) > max_captures:
+                            max_captures = len(captured)
+
+                    # Выбираем только ходы с максимальным количеством взятий
+                    best_moves = []
+                    for tr, tc, captured in piece_captures:
+                        if len(captured) == max_captures:
+                            best_moves.append((tr, tc, captured))
+
+                    self.valid_moves = best_moves
+                    # Сохраняем шашки для подсветки
+                    self.captured_pieces_to_highlight = []
+                    for _, _, captured in best_moves:
+                        for r, c in captured:
+                            if (r, c) not in self.captured_pieces_to_highlight:
+                                self.captured_pieces_to_highlight.append((r, c))
+        else:
+            # Нет обязательных взятий - можно выбрать любую свою шашку
+            if piece and piece.player == self.current_player:
+                self.selected_piece = (row, col)
+                self.valid_moves = self.get_valid_moves(row, col)
