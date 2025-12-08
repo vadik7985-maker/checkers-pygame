@@ -45,6 +45,7 @@ def draw_text_with_shadow(surface: pygame.Surface, text: str, font: pygame.font.
     surface.blit(shadow_surf, shadow_rect)
     surface.blit(text_surf, text_rect)
 
+
 def load_fonts() -> Dict[str, pygame.font.Font]:
     """Загрузка шрифтов"""
     try:
@@ -64,6 +65,7 @@ def load_fonts() -> Dict[str, pygame.font.Font]:
         'small': font_small,
         'tiny': font_tiny
     }
+
 
 def create_window_icon() -> pygame.Surface:
     """Создание иконки окна"""

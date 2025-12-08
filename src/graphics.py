@@ -191,7 +191,7 @@ class CheckersGUI:
             if all_captures:
                 status_text = "‼ ОБЯЗАТЕЛЬНОЕ ВЗЯТИЕ!"
             else:
-                status_text = " Ожидание хода..."
+                status_text = "↻ Ожидание хода..."
 
         # Обрезаем текст, если он слишком длинный
         if len(status_text) > 40:
@@ -426,7 +426,6 @@ class CheckersGUI:
             pygame.draw.circle(self.screen, ACCENT_GOLD, (corner_x, corner_y), 8)
             pygame.draw.circle(self.screen, (255, 200, 0), (corner_x, corner_y), 5)
 
-
     def draw(self):
         self.draw_board()
         self.draw_pieces()
@@ -500,3 +499,4 @@ class CheckersGUI:
 
         pygame.quit()
         sys.exit()
+        

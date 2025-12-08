@@ -265,7 +265,7 @@ class CheckersGame:
             self.captured_pieces_to_highlight = []
             simple_moves = self.get_simple_moves_for_piece(row, col, piece)
             return [(mr, mc, []) for mr, mc in simple_moves]
-   
+
     def move_piece(self, from_row, from_col, to_row, to_col):
         piece = self.board[from_row][from_col]
 
@@ -433,3 +433,4 @@ class CheckersGame:
             if piece and piece.player == self.current_player:
                 self.selected_piece = (row, col)
                 self.valid_moves = self.get_valid_moves(row, col)
+                
