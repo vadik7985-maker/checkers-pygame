@@ -328,6 +328,105 @@ class CheckersGUI:
         self.screen.blit(exit_text, exit_rect_text)
         self.exit_button_rect = exit_rect
 
+    def draw_game_over_screen(self):
+        """Отрисовка экрана окончания игры с увеличенным окном"""
+        overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 200))  # Более темный фон для лучшей читаемости
+        self.screen.blit(overlay, (0, 0))
+
+        # Увеличиваем размеры окна
+        win_rect = pygame.Rect(WIDTH // 2 - 300, HEIGHT // 2 - 180, 600, 360)  # Было 400x240, теперь 600x360
+        self.draw_gradient_rect(win_rect, (50, 50, 70), (30, 30, 50))
+        pygame.draw.rect(self.screen, ACCENT_GOLD, win_rect, 8, border_radius=20)  # Более толстая рамка
+
+        # Заголовок победителя - увеличенный шрифт
+        if self.game.winner == Player.WHITE:
+            winner_text = "БЕЛЫЕ ПОБЕДИЛИ!"
+            color = ACCENT_SILVER
+        else:
+            winner_text = "ЧЕРНЫЕ ПОБЕДИЛИ!"
+            color = (100, 100, 120)
+
+        # Заголовок с эффектом тени
+        shadow_offset = 3
+        shadow_text = pygame.font.Font(None, 64).render(winner_text, True, (0, 0, 0, 150))
+        shadow_rect = shadow_text.get_rect(center=(WIDTH // 2 + shadow_offset, HEIGHT // 2 - 120 + shadow_offset))
+        self.screen.blit(shadow_text, shadow_rect)
+
+        win_title = pygame.font.Font(None, 64).render(winner_text, True, ACCENT_GOLD)
+        win_title_rect = win_title.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 120))
+        self.screen.blit(win_title, win_title_rect)
+
+        # Причина победы - улучшенное отображение
+        reason = ""
+        additional_info = ""
+
+        if self.game.white_time <= 0:
+            reason = "ПОБЕДА ПО ВРЕМЕНИ"
+            additional_info = "У белых закончилось время"
+        elif self.game.black_time <= 0:
+            reason = "ПОБЕДА ПО ВРЕМЕНИ"
+            additional_info = "У черных закончилось время"
+        else:
+            white_count = sum(1 for row in self.game.board for piece in row if piece and piece.player == Player.WHITE)
+            black_count = sum(1 for row in self.game.board for piece in row if piece and piece.player == Player.BLACK)
+            reason = "ПОБЕДА ПО ОЧКАМ"
+            additional_info = f"Белые: {white_count} шашек  |  Черные: {black_count} шашек"
+
+        # Основная причина
+        reason_surface = pygame.font.Font(None, 36).render(reason, True, color)
+        reason_rect = reason_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 60))
+        self.screen.blit(reason_surface, reason_rect)
+
+        # Дополнительная информация
+        info_surface = pygame.font.Font(None, 28).render(additional_info, True, (200, 200, 220))
+        info_rect = info_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 20))
+        self.screen.blit(info_surface, info_rect)
+
+        # Статистика времени
+        white_time_str = self.game.format_time(self.game.white_time)
+        black_time_str = self.game.format_time(self.game.black_time)
+        time_stats = f"Оставшееся время: Белые: {white_time_str}  |  Черные: {black_time_str}"
+        time_surface = pygame.font.Font(None, 24).render(time_stats, True, (180, 180, 200))
+        time_rect = time_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 20))
+        self.screen.blit(time_surface, time_rect)
+
+        # Подсказки управления - более заметные
+        hint_y = HEIGHT // 2 + 70
+        hints = [
+            "Нажмите R для новой игры",
+            "Нажмите ESC для выхода",
+            "Или используйте кнопки в правой панели"
+        ]
+
+        for i, hint in enumerate(hints):
+            hint_surface = pygame.font.Font(None, 24).render(hint, True, TEXT_LIGHT if i == 2 else (200, 200, 220))
+            hint_rect = hint_surface.get_rect(center=(WIDTH // 2, hint_y + i * 30))
+
+            # Подсветка последней подсказки
+            if i == 2:
+                hint_bg = pygame.Surface((hint_surface.get_width() + 20, hint_surface.get_height() + 10),
+                                         pygame.SRCALPHA)
+                hint_bg.fill((40, 40, 60, 200))
+                hint_bg_rect = hint_bg.get_rect(center=(WIDTH // 2, hint_y + i * 30))
+                self.screen.blit(hint_bg, hint_bg_rect)
+
+            self.screen.blit(hint_surface, hint_rect)
+
+        # Декоративные элементы по углам (оставляем, они не мешают тексту)
+        corner_size = 30
+        corners = [
+            (win_rect.left + corner_size, win_rect.top + corner_size),
+            (win_rect.right - corner_size, win_rect.top + corner_size),
+            (win_rect.left + corner_size, win_rect.bottom - corner_size),
+            (win_rect.right - corner_size, win_rect.bottom - corner_size)
+        ]
+
+        for corner_x, corner_y in corners:
+            pygame.draw.circle(self.screen, ACCENT_GOLD, (corner_x, corner_y), 8)
+            pygame.draw.circle(self.screen, (255, 200, 0), (corner_x, corner_y), 5)
+
+
     def draw(self):
         self.draw_board()
         self.draw_pieces()
