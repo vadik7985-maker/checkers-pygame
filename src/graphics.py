@@ -365,6 +365,8 @@ class CheckersGUI:
 
         return None
 
+    def restart_game(self):
+        self.game = CheckersGame()
 
     def run(self):
         running = True
