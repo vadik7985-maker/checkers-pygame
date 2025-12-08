@@ -340,6 +340,32 @@ class CheckersGUI:
 
         pygame.display.flip()
 
+    def get_board_position(self, pos):
+        x, y = pos
+        if x < 0 or x >= BOARD_SIZE * SQUARE_SIZE:
+            return None
+        if y < 0 or y >= BOARD_SIZE * SQUARE_SIZE:
+            return None
+        row = y // SQUARE_SIZE
+        col = x // SQUARE_SIZE
+        if 0 <= row < BOARD_SIZE and 0 <= col < BOARD_SIZE:
+            return row, col
+        return None
+
+    def check_button_click(self, pos):
+        x, y = pos
+
+        # Проверяем кнопку рестарта
+        if hasattr(self, 'restart_button_rect') and self.restart_button_rect.collidepoint(pos):
+            return "RESTART"
+
+        # Проверяем кнопку выхода
+        if hasattr(self, 'exit_button_rect') and self.exit_button_rect.collidepoint(pos):
+            return "EXIT"
+
+        return None
+
+
     def run(self):
         running = True
         while running:
