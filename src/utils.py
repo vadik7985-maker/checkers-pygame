@@ -44,3 +44,31 @@ def draw_text_with_shadow(surface: pygame.Surface, text: str, font: pygame.font.
 
     surface.blit(shadow_surf, shadow_rect)
     surface.blit(text_surf, text_rect)
+
+def load_fonts() -> Dict[str, pygame.font.Font]:
+    """Загрузка шрифтов"""
+    try:
+        font_large = pygame.font.Font(None, 48)
+        font_medium = pygame.font.Font(None, 32)
+        font_small = pygame.font.Font(None, 24)
+        font_tiny = pygame.font.Font(None, 18)
+    except:
+        font_large = pygame.font.SysFont('arial', 48, bold=True)
+        font_medium = pygame.font.SysFont('arial', 32)
+        font_small = pygame.font.SysFont('arial', 24)
+        font_tiny = pygame.font.SysFont('arial', 18)
+    
+    return {
+        'large': font_large,
+        'medium': font_medium,
+        'small': font_small,
+        'tiny': font_tiny
+    }
+
+def create_window_icon() -> pygame.Surface:
+    """Создание иконки окна"""
+    icon = pygame.Surface((32, 32))
+    icon.fill(ACCENT_GOLD)
+    pygame.draw.circle(icon, BLACK_PIECE, (16, 10), 8)
+    pygame.draw.circle(icon, WHITE_PIECE, (16, 22), 8)
+    return icon
