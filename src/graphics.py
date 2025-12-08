@@ -168,6 +168,166 @@ class CheckersGUI:
 
                     piece.draw(self.screen, center_x, center_y, SQUARE_SIZE, selected)
 
+    def draw_status_bar(self):
+        status_rect = pygame.Rect(0, BOARD_SIZE * SQUARE_SIZE, WIDTH, 50)
+        self.draw_gradient_rect(status_rect, STATUS_BAR, (STATUS_BAR[0] - 5, STATUS_BAR[1] - 5, STATUS_BAR[2] - 5))
+
+        pygame.draw.line(self.screen, PANEL_ACCENT,
+                         (0, BOARD_SIZE * SQUARE_SIZE),
+                         (WIDTH, BOARD_SIZE * SQUARE_SIZE), 2)
+
+        status_text = ""
+        if self.game.game_over:
+            if self.game.white_time <= 0:
+                status_text = " Черные победили по времени!"
+            elif self.game.black_time <= 0:
+                status_text = " Белые победили по времени!"
+            else:
+                status_text = " Игра завершена!"
+        elif self.game.multiple_capture:
+            status_text = " Продолжайте взятие!"
+        else:
+            all_captures = self.game.get_all_possible_captures(self.game.current_player)
+            if all_captures:
+                status_text = "‼ ОБЯЗАТЕЛЬНОЕ ВЗЯТИЕ!"
+            else:
+                status_text = " Ожидание хода..."
+
+        # Обрезаем текст, если он слишком длинный
+        if len(status_text) > 40:
+            status_text = status_text[:37] + "..."
+
+        status_surface = self.font_small.render(status_text, True, TEXT_LIGHT)
+        text_rect = status_surface.get_rect(midleft=(20, BOARD_SIZE * SQUARE_SIZE + 25))
+        self.screen.blit(status_surface, text_rect)
+
+    def draw_panel(self):
+        panel_rect = pygame.Rect(BOARD_SIZE * SQUARE_SIZE, 0, 300, HEIGHT)
+        self.draw_gradient_rect(panel_rect, PANEL_COLOR,
+                                (PANEL_COLOR[0] - 10, PANEL_COLOR[1] - 10, PANEL_COLOR[2] - 10))
+
+        for i in range(3):
+            pygame.draw.line(self.screen,
+                             (PANEL_ACCENT[0] + i * 10, PANEL_ACCENT[1] + i * 10, PANEL_ACCENT[2] + i * 10),
+                             (BOARD_SIZE * SQUARE_SIZE + i, 0),
+                             (BOARD_SIZE * SQUARE_SIZE + i, HEIGHT), 1)
+
+        # Заголовок
+        title = self.font_medium.render("ШАШКИ", True, ACCENT_GOLD)
+        title_rect = title.get_rect(center=(BOARD_SIZE * SQUARE_SIZE + 150, 30))
+        self.screen.blit(title, title_rect)
+
+        timer_height = 100
+
+        # Белые таймер
+        white_timer_rect = pygame.Rect(BOARD_SIZE * SQUARE_SIZE + 30, 60, 240, timer_height)
+        is_active = self.game.current_player == Player.WHITE and not self.game.game_over
+        timer_color1 = (PANEL_ACCENT[0] + 20, PANEL_ACCENT[1] + 20, PANEL_ACCENT[2] + 20) if is_active else PANEL_ACCENT
+        timer_color2 = (timer_color1[0] - 10, timer_color1[1] - 10, timer_color1[2] - 10)
+
+        self.draw_gradient_rect(white_timer_rect, timer_color1, timer_color2)
+        border_color = ACCENT_SILVER if is_active else (100, 100, 120)
+        pygame.draw.rect(self.screen, border_color, white_timer_rect, 3, border_radius=12)
+
+        time_text = self.game.format_time(self.game.white_time)
+        color = ACCENT_RED if self.game.white_time < 60 and not self.game.game_over else TEXT_LIGHT
+        time_surface = self.font_large.render(time_text, True, color)
+        time_rect = time_surface.get_rect(center=white_timer_rect.center)
+        self.screen.blit(time_surface, time_rect)
+
+        label = self.font_small.render("БЕЛЫЕ", True, ACCENT_SILVER if is_active else TEXT_DARK)
+        label_rect = label.get_rect(center=(white_timer_rect.centerx, white_timer_rect.top + 20))
+        self.screen.blit(label, label_rect)
+
+        # Черные таймер
+        black_timer_rect = pygame.Rect(BOARD_SIZE * SQUARE_SIZE + 30, 60 + timer_height + 20, 240, timer_height)
+        is_active = self.game.current_player == Player.BLACK and not self.game.game_over
+        timer_color1 = (PANEL_ACCENT[0] + 20, PANEL_ACCENT[1] + 20, PANEL_ACCENT[2] + 20) if is_active else PANEL_ACCENT
+        timer_color2 = (timer_color1[0] - 10, timer_color1[1] - 10, timer_color1[2] - 10)
+
+        self.draw_gradient_rect(black_timer_rect, timer_color1, timer_color2)
+        border_color = ACCENT_SILVER if is_active else (100, 100, 120)
+        pygame.draw.rect(self.screen, border_color, black_timer_rect, 3, border_radius=12)
+
+        time_text = self.game.format_time(self.game.black_time)
+        color = ACCENT_RED if self.game.black_time < 60 and not self.game.game_over else TEXT_LIGHT
+        time_surface = self.font_large.render(time_text, True, color)
+        time_rect = time_surface.get_rect(center=black_timer_rect.center)
+        self.screen.blit(time_surface, time_rect)
+
+        label = self.font_small.render("ЧЕРНЫЕ", True, ACCENT_SILVER if is_active else TEXT_DARK)
+        label_rect = label.get_rect(center=(black_timer_rect.centerx, black_timer_rect.top + 20))
+        self.screen.blit(label, label_rect)
+
+        # Информация о ходе
+        info_y = black_timer_rect.bottom + 30
+
+        player_text = "ХОД БЕЛЫХ" if self.game.current_player == Player.WHITE else "ХОД ЧЕРНЫХ"
+        player_surface = self.font_medium.render(player_text, True,
+                                                 ACCENT_SILVER if self.game.current_player == Player.WHITE else TEXT_DARK)
+        player_rect = player_surface.get_rect(center=(BOARD_SIZE * SQUARE_SIZE + 150, info_y))
+        self.screen.blit(player_surface, player_rect)
+
+        # Счет шашек
+        white_count = sum(1 for row in self.game.board for piece in row if piece and piece.player == Player.WHITE)
+        black_count = sum(1 for row in self.game.board for piece in row if piece and piece.player == Player.BLACK)
+
+        count_y = info_y + 35
+        count_text = f" Белые: {white_count}  |  Черные: {black_count}"
+        count_surface = self.font_small.render(count_text, True, TEXT_LIGHT)
+        count_rect = count_surface.get_rect(center=(BOARD_SIZE * SQUARE_SIZE + 150, count_y))
+        self.screen.blit(count_surface, count_rect)
+
+        # Правила (с переносами строк)
+        rules_y = count_y + 40
+        rules = [
+            "ПРАВИЛА:",
+            "• Обязательное взятие",
+            "• Множественное взятие",
+            "• Дамки ходят свободно",
+            "• 7 минут на партию"
+        ]
+
+        for i, rule in enumerate(rules):
+            rule_surface = self.font_tiny.render(rule, True, TEXT_DARK if i == 0 else (160, 160, 180))
+            rule_rect = rule_surface.get_rect(midleft=(BOARD_SIZE * SQUARE_SIZE + 30, rules_y + i * 22))
+            self.screen.blit(rule_surface, rule_rect)
+
+        # Кнопки управления
+        button_y = rules_y + len(rules) * 22 + 25
+
+        # Кнопка рестарта
+        restart_rect = pygame.Rect(BOARD_SIZE * SQUARE_SIZE + 30, button_y, 240, 45)
+        mouse_pos = pygame.mouse.get_pos()
+        restart_hover = restart_rect.collidepoint(mouse_pos)
+
+        restart_color1 = ACCENT_BLUE if not restart_hover else (ACCENT_BLUE[0] + 20, ACCENT_BLUE[1] + 20,
+                                                                ACCENT_BLUE[2] + 20)
+        restart_color2 = (restart_color1[0] - 20, restart_color1[1] - 20, restart_color1[2] - 20)
+
+        self.draw_gradient_rect(restart_rect, restart_color1, restart_color2)
+        pygame.draw.rect(self.screen, LIGHT_BLUE, restart_rect, 3, border_radius=8)
+
+        restart_text = self.font_medium.render("НОВАЯ ИГРА", True, TEXT_LIGHT)
+        restart_rect_text = restart_text.get_rect(center=restart_rect.center)
+        self.screen.blit(restart_text, restart_rect_text)
+        self.restart_button_rect = restart_rect
+
+        # Кнопка выхода
+        exit_rect = pygame.Rect(BOARD_SIZE * SQUARE_SIZE + 30, button_y + 60, 240, 45)
+        exit_hover = exit_rect.collidepoint(mouse_pos)
+
+        exit_color1 = (100, 50, 50) if not exit_hover else (120, 60, 60)
+        exit_color2 = (exit_color1[0] - 20, exit_color1[1] - 20, exit_color1[2] - 20)
+
+        self.draw_gradient_rect(exit_rect, exit_color1, exit_color2)
+        pygame.draw.rect(self.screen, (200, 100, 100), exit_rect, 3, border_radius=8)
+
+        exit_text = self.font_medium.render("ВЫХОД", True, TEXT_LIGHT)
+        exit_rect_text = exit_text.get_rect(center=exit_rect.center)
+        self.screen.blit(exit_text, exit_rect_text)
+        self.exit_button_rect = exit_rect
+
     def draw(self):
         self.draw_board()
         self.draw_pieces()
