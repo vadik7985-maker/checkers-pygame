@@ -474,27 +474,6 @@ class CheckersGUI:
                 if event.type == pygame.QUIT:
                     running = False
 
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        button = self.check_button_click(event.pos)
-                        if button == "RESTART":
-                            self.restart_game()
-                        elif button == "EXIT":
-                            running = False
-                        else:
-                            pos = self.get_board_position(event.pos)
-                            if pos:
-                                self.game.handle_click(*pos)
-
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:
-                        self.restart_game()
-                    elif event.key == pygame.K_ESCAPE:
-                        running = False
-
-            # Обновляем таймер
-            self.game.update_timer()
-
             self.draw()
             self.clock.tick(FPS)
 
