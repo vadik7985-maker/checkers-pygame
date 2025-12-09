@@ -7,6 +7,8 @@ from typing import List, Tuple, Optional, Set
 from .constants import BOARD_SIZE, INITIAL_TIME_SECONDS
 from .enums import PieceType, Player
 from .models import Piece
+from .database import db_manager  # Импортируем менеджер базы данных
+
 
 class CheckersGame:
     def __init__(self):
@@ -23,6 +25,8 @@ class CheckersGame:
         self.captured_pieces_to_highlight = []
         self.setup_board()
         self.move_history = []
+        self.game_start_time = time.time()  # Время начала игры для статистики
+        self.game_saved = False  # Флаг, что игра уже сохранена
 
     def setup_board(self):
         # Расставляем черные шашки (сверху)
@@ -48,12 +52,14 @@ class CheckersGame:
                     self.white_time = 0
                     self.game_over = True
                     self.winner = Player.BLACK
+                    self.save_game_result()  # Сохраняем результат при окончании по времени
             else:
                 self.black_time -= time_passed
                 if self.black_time <= 0:
                     self.black_time = 0
                     self.game_over = True
                     self.winner = Player.WHITE
+                    self.save_game_result()  # Сохраняем результат при окончании по времени
 
         self.last_time_update = current_time
 
@@ -375,9 +381,88 @@ class CheckersGame:
         if white_pieces == 0 or (self.current_player == Player.WHITE and not current_player_has_moves):
             self.game_over = True
             self.winner = Player.BLACK
+            self.save_game_result()  # Сохраняем результат
         elif black_pieces == 0 or (self.current_player == Player.BLACK and not current_player_has_moves):
             self.game_over = True
             self.winner = Player.WHITE
+            self.save_game_result()  # Сохраняем результат
+
+    def save_game_result(self):
+        """Сохранение результата игры в базу данных"""
+        if not self.game_over or self.game_saved:
+            return False
+
+        self.game_saved = True
+
+        # Подсчитываем оставшиеся шашки
+        white_pieces = 0
+        black_pieces = 0
+        white_queens = 0
+        black_queens = 0
+
+        for row in range(BOARD_SIZE):
+            for col in range(BOARD_SIZE):
+                piece = self.get_piece(row, col)
+                if piece:
+                    if piece.player == Player.WHITE:
+                        white_pieces += 1
+                        if piece.type == PieceType.KING:
+                            white_queens += 1
+                    else:
+                        black_pieces += 1
+                        if piece.type == PieceType.KING:
+                            black_queens += 1
+
+        # Определяем победителя
+        winner = "white" if self.winner == Player.WHITE else "black"
+
+        # Подсчитываем общее количество ходов
+        total_moves = len(self.move_history)
+
+        # Вычисляем продолжительность игры
+        game_duration_seconds = time.time() - self.game_start_time
+        game_duration_str = f"{int(game_duration_seconds // 60)}:{int(game_duration_seconds % 60):02d}"
+
+        # Дополнительная информация
+        additional_info = {
+            "white_queens": white_queens,
+            "black_queens": black_queens,
+            "total_captures": sum(len(move['captured']) for move in self.move_history),
+            "game_duration_seconds": game_duration_seconds,
+            "move_history_summary": [
+                {
+                    "from": move['from'],
+                    "to": move['to'],
+                    "captured_count": len(move['captured']),
+                    "piece_type": "king" if move['piece'].type == PieceType.KING else "man"
+                }
+                for move in self.move_history[-20:]  # Последние 20 ходов
+            ]
+        }
+
+        # Сохраняем в базу данных через db_manager
+        try:
+            result = db_manager.save_game_result(
+                winner=winner,
+                white_pieces=white_pieces,
+                black_pieces=black_pieces,
+                white_time=self.white_time,
+                black_time=self.black_time,
+                total_moves=total_moves,
+                game_duration=game_duration_str,
+                additional_info=additional_info
+            )
+
+            if result:
+                print("Результат игры успешно сохранен в базу данных")
+            else:
+                print("Не удалось сохранить результат игры в базу данных")
+
+            return result
+
+        except Exception as e:
+            print(f"Ошибка при сохранении результата: {e}")
+            return False
 
     def handle_click(self, row, col):
         if self.game_over:
@@ -433,4 +518,3 @@ class CheckersGame:
             if piece and piece.player == self.current_player:
                 self.selected_piece = (row, col)
                 self.valid_moves = self.get_valid_moves(row, col)
-                
