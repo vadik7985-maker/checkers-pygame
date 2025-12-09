@@ -1,8 +1,11 @@
+"""
+Модуль для работы с базой данных PostgreSQL
+"""
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Optional, Dict, Any
 import os
-
 
 class DatabaseManager:
     def __init__(self):
@@ -12,6 +15,8 @@ class DatabaseManager:
     def connect(self):
         """Подключение к базе данных"""
         try:
+            # Получаем параметры подключения из переменных окружения
+            # Или используем значения по умолчанию
             db_host = os.getenv('DB_HOST', 'localhost')
             db_port = os.getenv('DB_PORT', '5432')
             db_name = os.getenv('DB_NAME', 'checkers_db')
@@ -28,10 +33,12 @@ class DatabaseManager:
             self.cursor = self.connection.cursor(cursor_factory=RealDictCursor)
             print("Успешно подключено к базе данных")
 
+            # Создаем таблицу если её нет
             self.create_tables()
 
         except Exception as e:
             print(f"Ошибка подключения к базе данных: {e}")
+            # Для разработки можно создать "заглушку"
             self.connection = None
 
     def create_tables(self):
@@ -82,13 +89,13 @@ class DatabaseManager:
 
         try:
             insert_query = """
-               INSERT INTO game_results 
-               (winner, white_pieces_remaining, black_pieces_remaining, 
-                white_time_remaining, black_time_remaining, total_moves,
-                game_duration, additional_info)
-               VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-               RETURNING id;
-               """
+            INSERT INTO game_results 
+            (winner, white_pieces_remaining, black_pieces_remaining, 
+             white_time_remaining, black_time_remaining, total_moves,
+             game_duration, additional_info)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id;
+            """
 
             self.cursor.execute(insert_query, (
                 winner,
@@ -113,15 +120,16 @@ class DatabaseManager:
             return False
 
     def get_game_statistics(self, limit: int = 10) -> list:
+        """Получение последних результатов игр"""
         if not self.connection:
             return []
 
         try:
             query = """
-               SELECT * FROM game_results 
-               ORDER BY game_date DESC 
-               LIMIT %s;
-               """
+            SELECT * FROM game_results 
+            ORDER BY game_date DESC 
+            LIMIT %s;
+            """
 
             self.cursor.execute(query, (limit,))
             return self.cursor.fetchall()
@@ -137,17 +145,17 @@ class DatabaseManager:
 
         try:
             query = """
-                SELECT 
-                    winner,
-                    COUNT(*) as total_games,
-                    AVG(white_pieces_remaining) as avg_white_pieces,
-                    AVG(black_pieces_remaining) as avg_black_pieces,
-                    AVG(white_time_remaining) as avg_white_time,
-                    AVG(black_time_remaining) as avg_black_time
-                FROM game_results 
-                GROUP BY winner
-                ORDER BY total_games DESC;
-                """
+            SELECT 
+                winner,
+                COUNT(*) as total_games,
+                AVG(white_pieces_remaining) as avg_white_pieces,
+                AVG(black_pieces_remaining) as avg_black_pieces,
+                AVG(white_time_remaining) as avg_white_time,
+                AVG(black_time_remaining) as avg_black_time
+            FROM game_results 
+            GROUP BY winner
+            ORDER BY total_games DESC;
+            """
 
             self.cursor.execute(query)
             results = self.cursor.fetchall()
@@ -177,5 +185,6 @@ class DatabaseManager:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
-    # Создаем глобальный экземпляр для использования в проекте
-    db_manager = DatabaseManager()
+
+# Создаем глобальный экземпляр для использования в проекте
+db_manager = DatabaseManager()
