@@ -129,3 +129,53 @@ class DatabaseManager:
         except Exception as e:
             print(f"Ошибка при получении статистики: {e}")
             return []
+
+    def get_winner_stats(self) -> Dict:
+        """Получение статистики побед"""
+        if not self.connection:
+            return {}
+
+        try:
+            query = """
+                SELECT 
+                    winner,
+                    COUNT(*) as total_games,
+                    AVG(white_pieces_remaining) as avg_white_pieces,
+                    AVG(black_pieces_remaining) as avg_black_pieces,
+                    AVG(white_time_remaining) as avg_white_time,
+                    AVG(black_time_remaining) as avg_black_time
+                FROM game_results 
+                GROUP BY winner
+                ORDER BY total_games DESC;
+                """
+
+            self.cursor.execute(query)
+            results = self.cursor.fetchall()
+
+            stats = {}
+            for row in results:
+                stats[row['winner']] = dict(row)
+
+            return stats
+
+        except Exception as e:
+            print(f"Ошибка при получении статистики побед: {e}")
+            return {}
+
+    def close(self):
+        """Закрытие соединения с базой данных"""
+        if self.cursor:
+            self.cursor.close()
+        if self.connection:
+            self.connection.close()
+            print("Соединение с базой данных закрыто")
+
+    def __enter__(self):
+        self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    # Создаем глобальный экземпляр для использования в проекте
+    db_manager = DatabaseManager()
