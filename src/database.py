@@ -21,7 +21,7 @@ class DatabaseManager:
             db_port = os.getenv('DB_PORT', '5432')
             db_name = os.getenv('DB_NAME', 'checkers_db')
             db_user = os.getenv('DB_USER', 'postgres')
-            db_password = os.getenv('DB_PASSWORD', 'password')
+            db_password = os.getenv('DB_PASSWORD', 'password').encode('latin-1').decode('utf-8')
 
             self.connection = psycopg2.connect(
                 host=db_host,
