@@ -1,7 +1,7 @@
 Модуль checkers-pygame
 =======================
 
-.. automodule:: src      # Автоматическая генерация документации для модуля src"
-   :members:             # Все функции и классы внутри
-   :undoc-members:       # Покажи даже те, у которых нет docstrings
-   :show-inheritance:    # Покажи информацию о наследовании классов
+.. automodule:: src
+   :members:
+   :undoc-members:
+   :show-inheritance:
