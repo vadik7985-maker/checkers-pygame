@@ -1,5 +1,14 @@
 """
-Модуль для вспомогательных функций
+Модуль для вспомогательных функций.
+
+Этот модуль содержит утилитарные функции для графического интерфейса игры.
+Все функции предназначены для работы с PyGame и улучшения визуального вида.
+
+Функции:
+    1. create_gradient_surface - создание поверхности с градиентом
+    2. draw_text_with_shadow - отрисовка текста с эффектом тени
+    3. load_fonts - загрузка и кэширование шрифтов
+    4. create_window_icon - создание иконки окна приложения
 """
 
 import pygame
@@ -11,7 +20,19 @@ def create_gradient_surface(width: int, height: int,
                             color1: Tuple[int, int, int],
                             color2: Tuple[int, int, int],
                             vertical: bool = True) -> pygame.Surface:
-    """Создание поверхности с градиентом"""
+    """Создает поверхность PyGame с градиентной заливкой.
+
+    Args:
+        width (int): Ширина поверхности в пикселях
+        height (int): Высота поверхности в пикселях
+        color1 (Tuple[int, int, int]): Начальный цвет градиента (RGB)
+        color2 (Tuple[int, int, int]): Конечный цвет градиента (RGB)
+        vertical (bool): Направление градиента (True - вертикальный, False - горизонтальный)
+
+    Returns:
+        pygame.Surface: Поверхность с градиентной заливкой
+
+    """
     surface = pygame.Surface((width, height), pygame.SRCALPHA)
 
     if vertical:
@@ -35,7 +56,17 @@ def create_gradient_surface(width: int, height: int,
 def draw_text_with_shadow(surface: pygame.Surface, text: str, font: pygame.font.Font,
                           color: Tuple[int, int, int], shadow_color: Tuple[int, int, int],
                           pos: Tuple[int, int], shadow_offset: int = 2) -> None:
-    """Отрисовка текста с тенью"""
+    """Отрисовывает текст с эффектом тени на указанной поверхности.
+
+    Args:
+        surface (pygame.Surface): Поверхность для отрисовки текста
+        text (str): Текст для отображения
+        font (pygame.font.Font): Шрифт для отрисовки текста
+        color (Tuple[int, int, int]): Основной цвет текста (RGB)
+        shadow_color (Tuple[int, int, int]): Цвет тени текста (RGB)
+        pos (Tuple[int, int]): Позиция текста (x, y) на поверхности
+        shadow_offset (int): Смещение тени в пикселях, по умолчанию 2
+    """
     shadow_surf = font.render(text, True, shadow_color)
     text_surf = font.render(text, True, color)
 
@@ -47,7 +78,18 @@ def draw_text_with_shadow(surface: pygame.Surface, text: str, font: pygame.font.
 
 
 def load_fonts() -> Dict[str, pygame.font.Font]:
-    """Загрузка шрифтов"""
+    """Загружает и возвращает словарь шрифтов разных размеров.
+
+    Returns:
+        Dict[str, pygame.font.Font]: Словарь с ключами:
+            - 'large': крупный шрифт (48px)
+            - 'medium': средний шрифт (32px)
+            - 'small': мелкий шрифт (24px)
+            - 'tiny': очень мелкий шрифт (18px)
+
+    Примечание:
+        Если системный шрифт не доступен, используется шрифт Arial.
+    """
     try:
         font_large = pygame.font.Font(None, 48)
         font_medium = pygame.font.Font(None, 32)
@@ -58,7 +100,7 @@ def load_fonts() -> Dict[str, pygame.font.Font]:
         font_medium = pygame.font.SysFont('arial', 32)
         font_small = pygame.font.SysFont('arial', 24)
         font_tiny = pygame.font.SysFont('arial', 18)
-    
+
     return {
         'large': font_large,
         'medium': font_medium,
@@ -68,7 +110,17 @@ def load_fonts() -> Dict[str, pygame.font.Font]:
 
 
 def create_window_icon() -> pygame.Surface:
-    """Создание иконки окна"""
+    """Создает иконку для окна приложения.
+
+    Returns:
+        pygame.Surface: Иконка размером 32x32 пикселя
+
+    Описание иконки:
+        - Золотой фон
+        - Черная шашка в верхней части
+        - Белая шашка в нижней части
+        - Представляет игру в шашки
+    """
     icon = pygame.Surface((32, 32))
     icon.fill(ACCENT_GOLD)
     pygame.draw.circle(icon, BLACK_PIECE, (16, 10), 8)
