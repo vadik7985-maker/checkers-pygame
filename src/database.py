@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
-
+from typing import Optional, Dict, Any
 import os
 
 
@@ -71,4 +71,61 @@ class DatabaseManager:
             print(f"Ошибка при создании таблиц: {e}")
             self.connection.rollback()
 
+    def save_game_result(self, winner: str, white_pieces: int, black_pieces: int,
+                         white_time: float, black_time: float, total_moves: int = 0,
+                         game_duration: Optional[str] = None,
+                         additional_info: Optional[Dict] = None) -> bool:
 
+        if not self.connection:
+            print("Нет подключения к базе данных")
+            return False
+
+        try:
+            insert_query = """
+               INSERT INTO game_results 
+               (winner, white_pieces_remaining, black_pieces_remaining, 
+                white_time_remaining, black_time_remaining, total_moves,
+                game_duration, additional_info)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+               RETURNING id;
+               """
+
+            self.cursor.execute(insert_query, (
+                winner,
+                white_pieces,
+                black_pieces,
+                white_time,
+                black_time,
+                total_moves,
+                game_duration,
+                psycopg2.extras.Json(additional_info) if additional_info else None
+            ))
+
+            game_id = self.cursor.fetchone()['id']
+            self.connection.commit()
+
+            print(f"Результат игры сохранен с ID: {game_id}")
+            return True
+
+        except Exception as e:
+            print(f"Ошибка при сохранении результата игры: {e}")
+            self.connection.rollback()
+            return False
+
+    def get_game_statistics(self, limit: int = 10) -> list:
+        if not self.connection:
+            return []
+
+        try:
+            query = """
+               SELECT * FROM game_results 
+               ORDER BY game_date DESC 
+               LIMIT %s;
+               """
+
+            self.cursor.execute(query, (limit,))
+            return self.cursor.fetchall()
+
+        except Exception as e:
+            print(f"Ошибка при получении статистики: {e}")
+            return []
