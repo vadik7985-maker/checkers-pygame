@@ -34,3 +34,41 @@ class DatabaseManager:
             print(f"Ошибка подключения к базе данных: {e}")
             self.connection = None
 
+    def create_tables(self):
+        """Создание таблиц в базе данных"""
+        try:
+            # Таблица для сохранения результатов игр
+            create_table_query = """
+            CREATE TABLE IF NOT EXISTS game_results (
+                id SERIAL PRIMARY KEY,
+                game_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                winner VARCHAR(10) NOT NULL,
+                white_pieces_remaining INTEGER NOT NULL,
+                black_pieces_remaining INTEGER NOT NULL,
+                white_time_remaining FLOAT NOT NULL,
+                black_time_remaining FLOAT NOT NULL,
+                total_moves INTEGER DEFAULT 0,
+                game_duration INTERVAL,
+                additional_info JSONB
+            );
+
+            -- Таблица для статистики игроков (если будете добавлять логины)
+            CREATE TABLE IF NOT EXISTS player_stats (
+                id SERIAL PRIMARY KEY,
+                player_name VARCHAR(50) UNIQUE,
+                total_games INTEGER DEFAULT 0,
+                wins INTEGER DEFAULT 0,
+                losses INTEGER DEFAULT 0,
+                total_pieces_taken INTEGER DEFAULT 0
+            );
+            """
+
+            self.cursor.execute(create_table_query)
+            self.connection.commit()
+            print("Таблицы успешно созданы")
+
+        except Exception as e:
+            print(f"Ошибка при создании таблиц: {e}")
+            self.connection.rollback()
+
+
