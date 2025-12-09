@@ -19,6 +19,9 @@ class CheckersGUI:
         self.clock = pygame.time.Clock()
         self.game = CheckersGame()
 
+        # Флаг для предотвращения повторного сохранения
+        self.game_saved = False
+
         # Иконка окна
         try:
             icon = pygame.Surface((32, 32))
@@ -329,7 +332,16 @@ class CheckersGUI:
         self.exit_button_rect = exit_rect
 
     def draw_game_over_screen(self):
-        """Отрисовка экрана окончания игры с увеличенным окном"""
+        """Отрисовка экрана окончания игры с увеличением окна"""
+
+        # Сохраняем результат игры в базу данных (если еще не сохранено)
+        if not self.game_saved and self.game.game_over:
+            if self.game.save_game_result():
+                print("Результат игры сохранен в базе данных")
+            else:
+                print("Не удалось сохранить результат игры")
+            self.game_saved = True
+
         overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 200))  # Более темный фон для лучшей читаемости
         self.screen.blit(overlay, (0, 0))
@@ -413,7 +425,7 @@ class CheckersGUI:
 
             self.screen.blit(hint_surface, hint_rect)
 
-        # Декоративные элементы по углам (оставляем, они не мешают тексту)
+        # Декоративные элементы по углам
         corner_size = 30
         corners = [
             (win_rect.left + corner_size, win_rect.top + corner_size),
@@ -465,6 +477,7 @@ class CheckersGUI:
 
     def restart_game(self):
         self.game = CheckersGame()
+        self.game_saved = False  # Сбрасываем флаг сохранения при новой игре
 
     def run(self):
         running = True
@@ -499,4 +512,3 @@ class CheckersGUI:
 
         pygame.quit()
         sys.exit()
-        
