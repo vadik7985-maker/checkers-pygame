@@ -74,3 +74,5 @@ def create_window_icon() -> pygame.Surface:
     pygame.draw.circle(icon, BLACK_PIECE, (16, 10), 8)
     pygame.draw.circle(icon, WHITE_PIECE, (16, 22), 8)
     return icon
+
+""
