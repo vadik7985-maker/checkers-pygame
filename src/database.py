@@ -6,6 +6,9 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Optional, Dict, Any
 import os
+from dotenv import load_dotenv
+import os
+
 
 class DatabaseManager:
     def __init__(self):
@@ -15,13 +18,24 @@ class DatabaseManager:
     def connect(self):
         """Подключение к базе данных"""
         try:
-            # Получаем параметры подключения из переменных окружения
-            # Или используем значения по умолчанию
+            # Загружаем .env из разных возможных мест
+            env_paths = [
+                os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'),  # Корень проекта
+                os.path.join(os.path.dirname(__file__), '.env'),  # Папка src
+                '.env'  # Текущая директория
+            ]
+
+            for env_path in env_paths:
+                if os.path.exists(env_path):
+                    load_dotenv(env_path)
+                    print(f"Загружен .env из: {env_path}")
+                    break
+
             db_host = os.getenv('DB_HOST', 'localhost')
             db_port = os.getenv('DB_PORT', '5432')
             db_name = os.getenv('DB_NAME', 'checkers_db')
             db_user = os.getenv('DB_USER', 'postgres')
-            db_password = os.getenv('DB_PASSWORD', 'password').encode('latin-1').decode('utf-8')
+            db_password = os.getenv('DB_PASSWORD', 'password')  # Убрали декодирование
 
             self.connection = psycopg2.connect(
                 host=db_host,
@@ -38,7 +52,6 @@ class DatabaseManager:
 
         except Exception as e:
             print(f"Ошибка подключения к базе данных: {e}")
-            # Для разработки можно создать "заглушку"
             self.connection = None
 
     def create_tables(self):
