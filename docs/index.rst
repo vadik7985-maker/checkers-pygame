@@ -1,17 +1,10 @@
-.. Шашки на PyGame documentation master file, created by
-   sphinx-quickstart on Tue Dec  9 21:36:34 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Документация игры "Шашки на PyGame"
+=====================================
 
-Шашки на PyGame documentation
-=============================
+Добро пожаловать в документацию игры "Шашки на PyGame"!
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+.. toctree::                # создает меню-оглавление
+   :maxdepth: 2             # показывать до 2 уровней вложенности
+   :caption: Содержание:
 
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
+   src                      # ссылка на файл src.rst (документация кода)
