@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Модуль database &mdash; документация Шашки на PyGame 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e35015f7"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=cd1d70c9"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Модуль enums" href="enums.html" />
+    <link rel="prev" title="Модуль constants" href="constants.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Шашки на PyGame
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Модули проекта:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Модуль constants</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Модуль database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.database.DatabaseManager"><code class="docutils literal notranslate"><span class="pre">DatabaseManager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.connection"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.connection</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.cursor"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.cursor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.close"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.close()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.connect"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.create_tables"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.create_tables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.get_game_statistics"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_game_statistics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.get_winner_stats"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_winner_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.database.DatabaseManager.save_game_result"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.save_game_result()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="enums.html">Модуль enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="game_logic.html">Модуль game_logic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Модуль graphics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Модуль models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Модуль utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Шашки на PyGame</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Модуль database</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/database.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.database">
+<span id="database"></span><h1>Модуль database<a class="headerlink" href="#module-src.database" title="Ссылка на этот заголовок"></a></h1>
+<p>Модуль для работы с базой данных PostgreSQL.</p>
+<p>Этот модуль предоставляет класс DatabaseManager для управления подключением
+к базе данных PostgreSQL и сохранения результатов игр.</p>
+<dl class="simple">
+<dt>Основные возможности:</dt><dd><ol class="arabic simple">
+<li><p>Подключение к PostgreSQL с настройками из .env файла</p></li>
+<li><p>Автоматическое создание таблиц при первом подключении</p></li>
+<li><p>Сохранение результатов игры с детальной статистикой</p></li>
+<li><p>Получение статистики игр и побед</p></li>
+<li><p>Безопасное управление соединением (контекстный менеджер)</p></li>
+</ol>
+</dd>
+<dt>Зависимости:</dt><dd><ul class="simple">
+<li><p>psycopg2: драйвер PostgreSQL для Python</p></li>
+<li><p>python-dotenv: загрузка переменных окружения из .env файла</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.database.DatabaseManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.database.</span></span><span class="sig-name descname"><span class="pre">DatabaseManager</span></span><a class="headerlink" href="#src.database.DatabaseManager" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Менеджер для работы с базой данных PostgreSQL.</p>
+<p>Обеспечивает все операции с базой данных для игры в шашки:
+подключение, создание таблиц, сохранение и получение статистики.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.connection">
+<span class="sig-name descname"><span class="pre">connection</span></span><a class="headerlink" href="#src.database.DatabaseManager.connection" title="Ссылка на это определение"></a></dt>
+<dd><p>Соединение с базой данных PostgreSQL</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.cursor">
+<span class="sig-name descname"><span class="pre">cursor</span></span><a class="headerlink" href="#src.database.DatabaseManager.cursor" title="Ссылка на это определение"></a></dt>
+<dd><p>Курсор для выполнения SQL-запросов</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.database.DatabaseManager.close" title="Ссылка на это определение"></a></dt>
+<dd><p>Закрывает соединение с базой данных.</p>
+<p>Освобождает ресурсы курсора и соединения.
+Рекомендуется вызывать после завершения работы с БД.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.database.DatabaseManager.connect" title="Ссылка на это определение"></a></dt>
+<dd><p>Устанавливает подключение к базе данных PostgreSQL.</p>
+<p>Загружает настройки из .env файла и подключается к базе данных.
+При успешном подключении автоматически создает необходимые таблицы.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Исключение<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – Если подключение к базе данных не удалось</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Примечание:</dt><dd><p>Ищет .env файл в нескольких возможных расположениях:
+1. Корень проекта
+2. Папка src
+3. Текущая директория</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.create_tables">
+<span class="sig-name descname"><span class="pre">create_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.database.DatabaseManager.create_tables" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает необходимые таблицы в базе данных.</p>
+<p>Создает две таблицы:
+1. game_results - для сохранения результатов отдельных игр
+2. player_stats - для статистики игроков (резерв на будущее)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Исключение<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Exception</strong> – Если создание таблиц не удалось</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.get_game_statistics">
+<span class="sig-name descname"><span class="pre">get_game_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#src.database.DatabaseManager.get_game_statistics" title="Ссылка на это определение"></a></dt>
+<dd><p>Получает последние результаты игр из базы данных.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>limit</strong> (<em>int</em>) – Количество возвращаемых записей, по умолчанию 10</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Список словарей с результатами игр</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Примечание:</dt><dd><p>Возвращает пустой список если нет подключения к БД или произошла ошибка</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.get_winner_stats">
+<span class="sig-name descname"><span class="pre">get_winner_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#src.database.DatabaseManager.get_winner_stats" title="Ссылка на это определение"></a></dt>
+<dd><p>Получает статистику побед по игрокам.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Результат<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Словарь с статистикой побед, где ключ - победитель („white“/“black“)</p>
+</dd>
+<dt class="field-even">Тип результата<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Статистика включает:</dt><dd><ul class="simple">
+<li><p>total_games: общее количество побед</p></li>
+<li><p>avg_white_pieces: среднее оставшихся белых шашек</p></li>
+<li><p>avg_black_pieces: среднее оставшихся черных шашек</p></li>
+<li><p>avg_white_time: среднее оставшееся время белых</p></li>
+<li><p>avg_black_time: среднее оставшееся время черных</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.database.DatabaseManager.save_game_result">
+<span class="sig-name descname"><span class="pre">save_game_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">winner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_pieces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_pieces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#src.database.DatabaseManager.save_game_result" title="Ссылка на это определение"></a></dt>
+<dd><p>Сохраняет результат игры в базу данных.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>winner</strong> (<em>str</em>) – Победитель игры („white“ или „black“)</p></li>
+<li><p><strong>white_pieces</strong> (<em>int</em>) – Количество оставшихся белых шашек</p></li>
+<li><p><strong>black_pieces</strong> (<em>int</em>) – Количество оставшихся черных шашек</p></li>
+<li><p><strong>white_time</strong> (<em>float</em>) – Оставшееся время белых в секундах</p></li>
+<li><p><strong>black_time</strong> (<em>float</em>) – Оставшееся время черных в секундах</p></li>
+<li><p><strong>total_moves</strong> (<em>int</em>) – Общее количество ходов в игре, по умолчанию 0</p></li>
+<li><p><strong>game_duration</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Продолжительность игры в формате MM:SS</p></li>
+<li><p><strong>additional_info</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – Дополнительная информация о игре</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>True если сохранение успешно, False в противном случае</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Исключение<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – Если произошла ошибка при сохранении</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="constants.html" class="btn btn-neutral float-left" title="Модуль constants" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+        <a href="enums.html" class="btn btn-neutral float-right" title="Модуль enums" accesskey="n" rel="next">Следующая <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2025, Команда разработчиков: Матвеев, Мисюченко, Жданова, Овчинникова, Бубнов. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

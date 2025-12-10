@@ -1,5 +1,16 @@
 """
-Модуль для графического интерфейса игры
+Модуль для графического интерфейса игры.
+
+Реализует графический интерфейс игры "Шашки" с использованием PyGame.
+Обеспечивает отрисовку доски, шашек, таймеров, панелей управления и экранов состояний.
+
+Основные компоненты:
+    1. Класс CheckersGUI - основной класс графического интерфейса
+    2. Отрисовка игровой доски с градиентами
+    3. Визуализация шашек с эффектами
+    4. Панель управления с таймерами и кнопками
+    5. Обработка пользовательского ввода
+    6. Экран окончания игры
 """
 
 import pygame
@@ -11,8 +22,31 @@ from .game_logic import CheckersGame
 from .enums import Player
 from .models import Piece
 
+
 class CheckersGUI:
+    """Класс графического интерфейса игры в шашки.
+
+    Attributes:
+        screen: Основная поверхность PyGame для отрисовки
+        clock: Объект Clock для управления FPS
+        game: Экземпляр CheckersGame для игровой логики
+        game_saved (bool): Флаг предотвращения повторного сохранения
+        font_large: Крупный шрифт для заголовков
+        font_medium: Средний шрифт для текста
+        font_small: Мелкий шрифт для подписей
+        font_tiny: Очень мелкий шрифт
+        pulse_value (float): Значение для пульсации анимаций
+        last_pulse_time (float): Время последней пульсации
+        restart_button_rect: Область кнопки "Новая игра"
+        exit_button_rect: Область кнопки "Выход"
+    """
+
     def __init__(self):
+        """Инициализирует графический интерфейс игры.
+
+        Создает окно PyGame, настраивает заголовок, иконку, шрифты
+        и создает экземпляр игровой логики.
+        """
         # Создаем окно с заголовком
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("♔ Русские Шашки - Профессиональная Версия ♚")
@@ -34,21 +68,30 @@ class CheckersGUI:
 
         # Загружаем шрифты
         try:
-            self.font_large = pygame.font.Font(None, 48)
-            self.font_medium = pygame.font.Font(None, 32)
-            self.font_small = pygame.font.Font(None, 24)
-            self.font_tiny = pygame.font.Font(None, 18)
+            self.font_large = pygame.font.Font(None, 48)  # для заголовков
+            self.font_medium = pygame.font.Font(None, 32)  # для основного текста
+            self.font_small = pygame.font.Font(None, 24)  # для мелкого текста
+            self.font_tiny = pygame.font.Font(None, 18)  # для очень мелкого текста
         except:
+            # если шрифт по умолчанию не доступен, используем системный Arial
             self.font_large = pygame.font.SysFont('arial', 48, bold=True)
             self.font_medium = pygame.font.SysFont('arial', 32)
             self.font_small = pygame.font.SysFont('arial', 24)
             self.font_tiny = pygame.font.SysFont('arial', 18)
 
-        # Эффекты
-        self.pulse_value = 0
-        self.last_pulse_time = 0
+            # переменные для анимационных эффектов
+        self.pulse_value = 0  # текущее значение для пульсации
+        self.last_pulse_time = 0  # время последней пульсации
 
     def draw_gradient_rect(self, rect, color1, color2, vertical=True):
+        """Рисует прямоугольник с градиентной заливкой на экране.
+
+        Args:
+            rect: Объект pygame.Rect или кортеж (x, y, width, height)
+            color1 (Tuple[int, int, int]): Начальный цвет градиента (RGB)
+            color2 (Tuple[int, int, int]): Конечный цвет градиента (RGB)
+            vertical (bool): Направление градиента (True - вертикальный)
+        """
         if vertical:
             for y in range(rect.height):
                 ratio = y / rect.height
@@ -69,6 +112,14 @@ class CheckersGUI:
                                  (rect.x + x, rect.y + rect.height))
 
     def draw_board(self):
+        """Отрисовывает игровую доску с клетками и подсветками.
+
+        Рисует:
+        1. Клетки доски в шахматном порядке с градиентами
+        2. Подсветку шашек для обязательного взятия (красная пульсация)
+        3. Подсветку допустимых ходов (зеленая пульсация)
+        4. Подсветку выбранной шашки (золотая рамка)
+        """
         self.screen.fill(BACKGROUND)
 
         # Рисуем доску
@@ -159,6 +210,11 @@ class CheckersGUI:
             pygame.draw.rect(self.screen, ACCENT_GOLD, rect, border_width, border_radius=10)
 
     def draw_pieces(self):
+        """Отрисовывает все шашки на игровой доске.
+
+        Использует метод draw() класса Piece для отрисовки каждой шашки
+        с учетом ее типа (простая/дамка) и состояния (выделена/не выделена).
+        """
         for row in range(BOARD_SIZE):
             for col in range(BOARD_SIZE):
                 piece = self.game.board[row][col]
@@ -172,6 +228,12 @@ class CheckersGUI:
                     piece.draw(self.screen, center_x, center_y, SQUARE_SIZE, selected)
 
     def draw_status_bar(self):
+        """Отрисовывает нижнюю статусную панель с информацией о ходе игры.
+
+        Отображает:
+        1. Текущее состояние игры (ожидание хода, обязательное взятие, конец игры)
+        2. Причину окончания игры (время, шашки)
+        """
         status_rect = pygame.Rect(0, BOARD_SIZE * SQUARE_SIZE, WIDTH, 50)
         self.draw_gradient_rect(status_rect, STATUS_BAR, (STATUS_BAR[0] - 5, STATUS_BAR[1] - 5, STATUS_BAR[2] - 5))
 
@@ -205,6 +267,14 @@ class CheckersGUI:
         self.screen.blit(status_surface, text_rect)
 
     def draw_panel(self):
+        """Отрисовывает правую боковую панель с управлением и информацией.
+
+        Содержит:
+        1. Таймеры игроков с подсветкой активного игрока
+        2. Информацию о текущем ходе и счете шашек
+        3. Список правил игры
+        4. Кнопки управления (Новая игра, Выход)
+        """
         panel_rect = pygame.Rect(BOARD_SIZE * SQUARE_SIZE, 0, 300, HEIGHT)
         self.draw_gradient_rect(panel_rect, PANEL_COLOR,
                                 (PANEL_COLOR[0] - 10, PANEL_COLOR[1] - 10, PANEL_COLOR[2] - 10))
@@ -332,8 +402,16 @@ class CheckersGUI:
         self.exit_button_rect = exit_rect
 
     def draw_game_over_screen(self):
-        """Отрисовка экрана окончания игры с увеличением окна"""
+        """Отрисовывает экран окончания игры с информацией о победителе.
 
+        Отображает:
+        1. Затемненный фон поверх игры
+        2. Окно с информацией о победителе
+        3. Причину победы (время, шашки)
+        4. Статистику игры
+        5. Подсказки по управлению
+        6. Автоматически сохраняет результат игры при первом показе
+        """
         # Сохраняем результат игры в базу данных (если еще не сохранено)
         if not self.game_saved and self.game.game_over:
             if self.game.save_game_result():
@@ -439,6 +517,15 @@ class CheckersGUI:
             pygame.draw.circle(self.screen, (255, 200, 0), (corner_x, corner_y), 5)
 
     def draw(self):
+        """Основной метод отрисовки, который вызывает все компоненты интерфейса.
+
+        Порядок отрисовки:
+        1. Игровая доска
+        2. Шашки
+        3. Статусная панель
+        4. Боковая панель управления
+        5. Экран окончания игры (если игра завершена)
+        """
         self.draw_board()
         self.draw_pieces()
         self.draw_status_bar()
@@ -451,6 +538,14 @@ class CheckersGUI:
         pygame.display.flip()
 
     def get_board_position(self, pos):
+        """Преобразует координаты мыши в позицию на игровой доске.
+
+        Args:
+            pos (Tuple[int, int]): Координаты мыши (x, y)
+
+        Returns:
+            Optional[Tuple[int, int]]: Позиция на доске (ряд, столбец) или None
+        """
         x, y = pos
         if x < 0 or x >= BOARD_SIZE * SQUARE_SIZE:
             return None
@@ -463,6 +558,14 @@ class CheckersGUI:
         return None
 
     def check_button_click(self, pos):
+        """Проверяет, была ли нажата какая-либо кнопка управления.
+
+        Args:
+            pos (Tuple[int, int]): Координаты мыши (x, y)
+
+        Returns:
+            Optional[str]: Идентификатор кнопки ("RESTART" или "EXIT") или None
+        """
         x, y = pos
 
         # Проверяем кнопку рестарта
@@ -476,10 +579,24 @@ class CheckersGUI:
         return None
 
     def restart_game(self):
+        """Перезапускает игру, создавая новый экземпляр CheckersGame.
+
+        Сбрасывает все игровые состояния, таймеры и флаги сохранения.
+        """
         self.game = CheckersGame()
         self.game_saved = False  # Сбрасываем флаг сохранения при новой игре
 
     def run(self):
+        """Основной игровой цикл, обрабатывающий события и обновляющий экран.
+
+        Цикл:
+        1. Обрабатывает события PyGame (клики, клавиши, закрытие)
+        2. Обновляет игровой таймер
+        3. Отрисовывает интерфейс
+        4. Поддерживает стабильный FPS
+
+        Выход из цикла происходит при закрытии окна или нажатии ESC.
+        """
         running = True
         while running:
             for event in pygame.event.get():

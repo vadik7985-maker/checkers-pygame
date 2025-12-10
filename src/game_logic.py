@@ -1,5 +1,17 @@
 """
-Модуль для логики игры в шашки
+Модуль для логики игры в шашки.
+
+Содержит основной класс CheckersGame, реализующий правила русских шашек.
+Обеспечивает игровую логику, проверку ходов, управление временем и определение победителя.
+
+Основные возможности:
+    1. Полная реализация правил русских шашек
+    2. Обязательное взятие шашек противника
+    3. Множественное взятие (несколько шашек за один ход)
+    4. Превращение в дамку при достижении противоположного края
+    5. Таймер на 7 минут для каждого игрока
+    6. Автоматическое сохранение результатов в базу данных
+    7. Подсветка обязательных взятий
 """
 
 import time
@@ -11,24 +23,53 @@ from .database import db_manager  # Импортируем менеджер ба
 
 
 class CheckersGame:
+    """Основной класс, управляющий логикой игры в шашки.
+
+    Attributes:
+        board (List[List[Optional[Piece]]]): Игровая доска 8x8
+        current_player (Player): Текущий игрок (WHITE или BLACK)
+        selected_piece (Optional[Tuple[int, int]]): Выбранная шашка (ряд, столбец)
+        valid_moves (List[Tuple]): Допустимые ходы для выбранной шашки
+        game_over (bool): Флаг окончания игры
+        winner (Optional[Player]): Победитель игры
+        white_time (float): Оставшееся время белых в секундах
+        black_time (float): Оставшееся время черных в секундах
+        last_time_update (float): Время последнего обновления таймера
+        multiple_capture (bool): Флаг множественного взятия
+        captured_pieces_to_highlight (List[Tuple[int, int]]): Шашки для подсветки
+        move_history (List[Dict]): История всех ходов
+        game_start_time (float): Время начала игры
+        game_saved (bool): Флаг сохранения результата игры
+    """
+
     def __init__(self):
+        """Инициализирует новую игру в шашки.
+
+        Создает доску 8x8, расставляет шашки, устанавливает таймеры
+        и настраивает начальное состояние игры.
+        """
         self.board = [[None for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
-        self.current_player = Player.WHITE
-        self.selected_piece = None
-        self.valid_moves = []
-        self.game_over = False
-        self.winner = None
-        self.white_time = INITIAL_TIME_SECONDS
-        self.black_time = INITIAL_TIME_SECONDS
-        self.last_time_update = time.time()
-        self.multiple_capture = False
-        self.captured_pieces_to_highlight = []
-        self.setup_board()
-        self.move_history = []
-        self.game_start_time = time.time()  # Время начала игры для статистики
-        self.game_saved = False  # Флаг, что игра уже сохранена
+        self.current_player = Player.WHITE  # белые ходят первыми
+        self.selected_piece = None  # пока нет выбранной шашки
+        self.valid_moves = []  # допустимые ходы
+        self.game_over = False  # игра не окончена
+        self.winner = None  # победитель еще не определен
+        self.white_time = INITIAL_TIME_SECONDS  # начальное время белых
+        self.black_time = INITIAL_TIME_SECONDS  # начальное время черных
+        self.last_time_update = time.time()  # время последнего обновления таймера
+        self.multiple_capture = False  # нет множественного взятия
+        self.captured_pieces_to_highlight = []  # нет шашек для подсветки
+        self.setup_board()  # расстановка шашек на доске
+        self.move_history = []  # история ходов
+        self.game_start_time = time.time()  # время начала игры для статистики
+        self.game_saved = False  # игра еще не сохранена в БД
 
     def setup_board(self):
+        """Расставляет шашки на доске в начальные позиции согласно правилам русских шашек.
+
+        Черные шашки занимают первые 3 ряда (0-2), белые - последние 3 ряда (5-7).
+        Шашки размещаются только на темных клетках ((row + col) % 2 == 1).
+        """
         # Расставляем черные шашки (сверху)
         for row in range(3):
             for col in range(BOARD_SIZE):
@@ -42,6 +83,11 @@ class CheckersGame:
                     self.board[row][col] = Piece(Player.WHITE)
 
     def update_timer(self):
+        """Обновляет таймеры игроков на основе прошедшего времени.
+
+        Уменьшает время текущего игрока. Если время истекает,
+        завершает игру и сохраняет результат.
+        """
         current_time = time.time()
         time_passed = current_time - self.last_time_update
 
@@ -64,17 +110,42 @@ class CheckersGame:
         self.last_time_update = current_time
 
     def format_time(self, seconds):
+        """Форматирует время в секундах в строку формата MM:SS.
+
+        Args:
+            seconds (float): Время в секундах
+
+        Returns:
+            str: Отформатированное время (например, "05:30")
+        """
         minutes = int(seconds // 60)
         secs = int(seconds % 60)
         return f"{minutes:02d}:{secs:02d}"
 
     def get_piece(self, row, col):
+        """Возвращает шашку на указанной позиции доски.
+
+        Args:
+            row (int): Номер ряда (0-7)
+            col (int): Номер столбца (0-7)
+
+        Returns:
+            Optional[Piece]: Шашка на позиции или None, если клетка пуста
+        """
         if 0 <= row < BOARD_SIZE and 0 <= col < BOARD_SIZE:
             return self.board[row][col]
         return None
 
     def get_all_possible_captures(self, player: Player):
-        """Получить все возможные взятия для всех шашек игрока"""
+        """Находит все возможные взятия для всех шашек указанного игрока.
+
+        Args:
+            player (Player): Игрок (WHITE или BLACK)
+
+        Returns:
+            List[Tuple]: Список всех возможных взятий в формате
+                        (from_row, from_col, to_row, to_col, captured)
+        """
         all_captures = []
 
         for row in range(BOARD_SIZE):
@@ -90,7 +161,18 @@ class CheckersGame:
     def get_captures_for_piece(self, row: int, col: int, piece: Piece,
                                captured_so_far: List[Tuple[int, int]] = None,
                                visited: set = None):
-        """Найти все возможные взятия для шашки с рекурсией"""
+        """Находит все возможные взятия для конкретной шашки с рекурсией для множественного взятия.
+
+        Args:
+            row (int): Ряд шашки
+            col (int): Столбец шашки
+            piece (Piece): Объект шашки
+            captured_so_far (List[Tuple[int, int]]): Уже взятые шашки в этом ходе
+            visited (set): Посещенные состояния для предотвращения циклов
+
+        Returns:
+            List[Tuple]: Список возможных взятий в формате (target_row, target_col, captured)
+        """
         if captured_so_far is None:
             captured_so_far = []
         if visited is None:
@@ -102,7 +184,7 @@ class CheckersGame:
             return captures
         visited.add(visited_key)
 
-        if piece.type == PieceType.KING:
+        if piece.type == PieceType.KING: # ход дамки
             directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
 
             for dr, dc in directions:
@@ -201,7 +283,16 @@ class CheckersGame:
         return captures
 
     def get_simple_moves_for_piece(self, row: int, col: int, piece: Piece):
-        """Получить простые ходы для шашки (без взятия)"""
+        """Получает простые ходы для шашки (без взятия).
+
+        Args:
+            row (int): Ряд шашки
+            col (int): Столбец шашки
+            piece (Piece): Объект шашки
+
+        Returns:
+            List[Tuple[int, int]]: Список возможных позиций для хода
+        """
         moves = []
 
         if piece.type == PieceType.KING:
@@ -233,7 +324,15 @@ class CheckersGame:
         return moves
 
     def get_valid_moves(self, row, col):
-        """Получить допустимые ходы для выбранной шашки"""
+        """Получает допустимые ходы для выбранной шашки с учетом правил обязательного взятия.
+
+        Args:
+            row (int): Ряд шашки
+            col (int): Столбец шашки
+
+        Returns:
+            List[Tuple]: Список допустимых ходов в формате (target_row, target_col, captured)
+        """
         piece = self.get_piece(row, col)
         if not piece or piece.player != self.current_player:
             return []
@@ -273,6 +372,17 @@ class CheckersGame:
             return [(mr, mc, []) for mr, mc in simple_moves]
 
     def move_piece(self, from_row, from_col, to_row, to_col):
+        """Перемещает шашку на указанную позицию, выполняя взятия если необходимо.
+
+        Args:
+            from_row (int): Исходный ряд
+            from_col (int): Исходный столбец
+            to_row (int): Целевой ряд
+            to_col (int): Целевой столбец
+
+        Returns:
+            bool: True если ход выполнен успешно, False в противном случае
+        """
         piece = self.board[from_row][from_col]
 
         # Проверяем, является ли ход допустимым
@@ -354,6 +464,15 @@ class CheckersGame:
         return True
 
     def check_game_over(self):
+        """Проверяет условия окончания игры и определяет победителя.
+
+        Игра заканчивается если:
+        1. У одного из игроков не осталось шашек
+        2. У текущего игрока нет допустимых ходов
+        3. Время одного из игроков истекло (проверяется в update_timer)
+
+        Автоматически сохраняет результат игры при завершении.
+        """
         white_pieces = 0
         black_pieces = 0
 
@@ -388,25 +507,31 @@ class CheckersGame:
             self.save_game_result()  # Сохраняем результат
 
     def save_game_result(self):
-        """Сохранение результата игры в базу данных"""
+        """Сохраняет результат игры в базу данных.
+
+        Собирает статистику игры и сохраняет ее через DatabaseManager.
+
+        Returns:
+            bool: True если сохранение успешно, False в противном случае
+        """
         if not self.game_over or self.game_saved:
-            return False
+            return False # игра не окончена или уже сохранена
 
-        self.game_saved = True
+        self.game_saved = True # предотваращаем повторное сохранение
 
-        # Подсчитываем оставшиеся шашки
+        # Подсчитываем оставшиеся шашки и дамки
         white_pieces = 0
         black_pieces = 0
         white_queens = 0
         black_queens = 0
 
-        for row in range(BOARD_SIZE):
-            for col in range(BOARD_SIZE):
-                piece = self.get_piece(row, col)
+        for row in range(BOARD_SIZE): # смотрим ряды
+            for col in range(BOARD_SIZE): # смотрим столбцы
+                piece = self.get_piece(row, col) # получаем фигуру на текущей позиции
                 if piece:
-                    if piece.player == Player.WHITE:
+                    if piece.player == Player.WHITE: # белая шашка
                         white_pieces += 1
-                        if piece.type == PieceType.KING:
+                        if piece.type == PieceType.KING: # белая дамка
                             white_queens += 1
                     else:
                         black_pieces += 1
@@ -417,7 +542,7 @@ class CheckersGame:
         winner = "white" if self.winner == Player.WHITE else "black"
 
         # Подсчитываем общее количество ходов
-        total_moves = len(self.move_history)
+        total_moves = len(self.move_history) # равно длине списка истории ходов
 
         # Вычисляем продолжительность игры
         game_duration_seconds = time.time() - self.game_start_time
@@ -425,16 +550,16 @@ class CheckersGame:
 
         # Дополнительная информация
         additional_info = {
-            "white_queens": white_queens,
+            "white_queens": white_queens, # кол во дамок
             "black_queens": black_queens,
-            "total_captures": sum(len(move['captured']) for move in self.move_history),
+            "total_captures": sum(len(move['captured']) for move in self.move_history), # общее колво взятых шашек
             "game_duration_seconds": game_duration_seconds,
             "move_history_summary": [
                 {
-                    "from": move['from'],
-                    "to": move['to'],
-                    "captured_count": len(move['captured']),
-                    "piece_type": "king" if move['piece'].type == PieceType.KING else "man"
+                    "from": move['from'], # откуда ходили
+                    "to": move['to'], # куда
+                    "captured_count": len(move['captured']), # сколько шашек взяли
+                    "piece_type": "king" if move['piece'].type == PieceType.KING else "man" # тип фигуры
                 }
                 for move in self.move_history[-20:]  # Последние 20 ходов
             ]
@@ -444,7 +569,7 @@ class CheckersGame:
         try:
             result = db_manager.save_game_result(
                 winner=winner,
-                white_pieces=white_pieces,
+                white_pieces=white_pieces, # все что осталось и тд
                 black_pieces=black_pieces,
                 white_time=self.white_time,
                 black_time=self.black_time,
@@ -465,6 +590,18 @@ class CheckersGame:
             return False
 
     def handle_click(self, row, col):
+        """Обрабатывает клик мыши на игровой доске.
+
+        Args:
+            row (int): Ряд клетки
+            col (int): Столбец клетки
+
+        Логика обработки:
+        1. Если игра окончена - игнорирует клик
+        2. Если шашка выбрана - пытается сделать ход
+        3. Если шашка не выбрана - выбирает шашку текущего игрока
+        4. Учитывает правила обязательного взятия
+        """
         if self.game_over:
             return
 

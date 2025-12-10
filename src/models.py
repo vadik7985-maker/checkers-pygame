@@ -1,5 +1,13 @@
 """
-Модуль для хранения классов данных
+Модуль для хранения классов данных.
+
+Этот модуль содержит dataclass-классы, представляющие основные сущности игры.
+Используется для типобезопасного хранения данных о шашках, ходах и состоянии игры.
+
+Классы:
+    1. Piece - класс шашки с методами отрисовки
+    2. Move - класс хода с информацией о взятиях
+    3. GameState - класс состояния игры
 """
 
 import pygame
@@ -8,15 +16,30 @@ from typing import List, Tuple, Optional, Any
 from .constants import PIECE_SHADOW, ACCENT_GOLD
 from .enums import PieceType, Player
 
+
 @dataclass
 class Piece:
-    """Класс, представляющий шашку"""
+    """Класс, представляющий шашку на игровой доске.
+
+    Attributes:
+        player (Player): Игрок, которому принадлежит шашка (WHITE или BLACK)
+        type (PieceType): Тип шашки (MAN или KING), по умолчанию MAN
+        last_move_time (float): Время последнего хода этой шашкой, по умолчанию 0.0
+    """
     player: Player
     type: PieceType = PieceType.MAN
     last_move_time: float = 0.0
-    
+
     def draw(self, screen, x, y, size, selected=False):
-        """Отрисовка шашки на экране"""
+        """Отрисовывает шашку на экране.
+
+        Args:
+            screen: Поверхность PyGame для отрисовки
+            x (int): X-координата центра шашки
+            y (int): Y-координата центра шашки
+            size (int): Размер шашки в пикселях
+            selected (bool): Флаг выделения шашки, по умолчанию False
+        """
         radius = size // 2 - 5
 
         # Тень
@@ -81,18 +104,42 @@ class Piece:
 
             pygame.draw.circle(screen, (255, 230, 50), (x, y), crown_size // 2)
 
+
 @dataclass
 class Move:
-    """Класс, представляющий ход в игре"""
+    """Класс, представляющий ход в игре.
+
+    Attributes:
+        from_pos (Tuple[int, int]): Начальная позиция шашки (ряд, столбец)
+        to_pos (Tuple[int, int]): Конечная позиция шашки (ряд, столбец)
+        captured_pieces (List[Tuple[int, int]]): Список взятых шашек, по умолчанию пустой
+        piece (Optional[Any]): Ссылка на объект шашки, по умолчанию None
+        turn_start_time (float): Время начала хода, по умолчанию 0.0
+    """
     from_pos: Tuple[int, int]
     to_pos: Tuple[int, int]
     captured_pieces: List[Tuple[int, int]] = field(default_factory=list)
     piece: Optional[Any] = None
     turn_start_time: float = 0.0
 
+
 @dataclass
 class GameState:
-    """Класс, представляющий состояние игры"""
+    """Класс, представляющий состояние игры.
+
+    Attributes:
+        board (List[List[Optional[Piece]]]): Игровая доска 8x8
+        current_player (Player): Текущий игрок
+        selected_piece (Optional[Tuple[int, int]]): Выбранная шашка
+        valid_moves (List[Tuple[int, int, List[Tuple[int, int]]]]): Допустимые ходы
+        game_over (bool): Флаг окончания игры
+        winner (Optional[Player]): Победитель игры
+        white_time (float): Оставшееся время белых
+        black_time (float): Оставшееся время черных
+        multiple_capture (bool): Флаг множественного взятия
+        captured_pieces_to_highlight (List[Tuple[int, int]]): Шашки для подсветки
+        move_history (List[Move]): История ходов
+    """
     board: List[List[Optional[Piece]]]
     current_player: Player
     selected_piece: Optional[Tuple[int, int]]

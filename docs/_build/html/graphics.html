@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Модуль graphics &mdash; документация Шашки на PyGame 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e35015f7"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=cd1d70c9"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Модуль models" href="models.html" />
+    <link rel="prev" title="Модуль game_logic" href="game_logic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Шашки на PyGame
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Модули проекта:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Модуль constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Модуль database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enums.html">Модуль enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="game_logic.html">Модуль game_logic</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Модуль graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.graphics.CheckersGUI"><code class="docutils literal notranslate"><span class="pre">CheckersGUI</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.screen"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.screen</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.clock"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.clock</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.game"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.game</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.game_saved"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.game_saved</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.font_large"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.font_large</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.font_medium"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.font_medium</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.font_small"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.font_small</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.font_tiny"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.font_tiny</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.pulse_value"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.pulse_value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.last_pulse_time"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.last_pulse_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.restart_button_rect"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.restart_button_rect</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.exit_button_rect"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.exit_button_rect</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.check_button_click"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.check_button_click()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.draw"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.draw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.draw_board"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.draw_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.draw_game_over_screen"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.draw_game_over_screen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.draw_gradient_rect"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.draw_gradient_rect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.draw_panel"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.draw_panel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.draw_pieces"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.draw_pieces()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.draw_status_bar"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.draw_status_bar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.get_board_position"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.get_board_position()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.restart_game"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.restart_game()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.graphics.CheckersGUI.run"><code class="docutils literal notranslate"><span class="pre">CheckersGUI.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Модуль models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Модуль utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Шашки на PyGame</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Модуль graphics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/graphics.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.graphics">
+<span id="graphics"></span><h1>Модуль graphics<a class="headerlink" href="#module-src.graphics" title="Ссылка на этот заголовок"></a></h1>
+<p>Модуль для графического интерфейса игры.</p>
+<p>Реализует графический интерфейс игры «Шашки» с использованием PyGame.
+Обеспечивает отрисовку доски, шашек, таймеров, панелей управления и экранов состояний.</p>
+<dl class="simple">
+<dt>Основные компоненты:</dt><dd><ol class="arabic simple">
+<li><p>Класс CheckersGUI - основной класс графического интерфейса</p></li>
+<li><p>Отрисовка игровой доски с градиентами</p></li>
+<li><p>Визуализация шашек с эффектами</p></li>
+<li><p>Панель управления с таймерами и кнопками</p></li>
+<li><p>Обработка пользовательского ввода</p></li>
+<li><p>Экран окончания игры</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.graphics.</span></span><span class="sig-name descname"><span class="pre">CheckersGUI</span></span><a class="headerlink" href="#src.graphics.CheckersGUI" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Класс графического интерфейса игры в шашки.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.screen">
+<span class="sig-name descname"><span class="pre">screen</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.screen" title="Ссылка на это определение"></a></dt>
+<dd><p>Основная поверхность PyGame для отрисовки</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.clock">
+<span class="sig-name descname"><span class="pre">clock</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.clock" title="Ссылка на это определение"></a></dt>
+<dd><p>Объект Clock для управления FPS</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.game">
+<span class="sig-name descname"><span class="pre">game</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.game" title="Ссылка на это определение"></a></dt>
+<dd><p>Экземпляр CheckersGame для игровой логики</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.game_saved">
+<span class="sig-name descname"><span class="pre">game_saved</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.game_saved" title="Ссылка на это определение"></a></dt>
+<dd><p>Флаг предотвращения повторного сохранения</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.font_large">
+<span class="sig-name descname"><span class="pre">font_large</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.font_large" title="Ссылка на это определение"></a></dt>
+<dd><p>Крупный шрифт для заголовков</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.font_medium">
+<span class="sig-name descname"><span class="pre">font_medium</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.font_medium" title="Ссылка на это определение"></a></dt>
+<dd><p>Средний шрифт для текста</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.font_small">
+<span class="sig-name descname"><span class="pre">font_small</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.font_small" title="Ссылка на это определение"></a></dt>
+<dd><p>Мелкий шрифт для подписей</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.font_tiny">
+<span class="sig-name descname"><span class="pre">font_tiny</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.font_tiny" title="Ссылка на это определение"></a></dt>
+<dd><p>Очень мелкий шрифт</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.pulse_value">
+<span class="sig-name descname"><span class="pre">pulse_value</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.pulse_value" title="Ссылка на это определение"></a></dt>
+<dd><p>Значение для пульсации анимаций</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.last_pulse_time">
+<span class="sig-name descname"><span class="pre">last_pulse_time</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.last_pulse_time" title="Ссылка на это определение"></a></dt>
+<dd><p>Время последней пульсации</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.restart_button_rect">
+<span class="sig-name descname"><span class="pre">restart_button_rect</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.restart_button_rect" title="Ссылка на это определение"></a></dt>
+<dd><p>Область кнопки «Новая игра»</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.exit_button_rect">
+<span class="sig-name descname"><span class="pre">exit_button_rect</span></span><a class="headerlink" href="#src.graphics.CheckersGUI.exit_button_rect" title="Ссылка на это определение"></a></dt>
+<dd><p>Область кнопки «Выход»</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.check_button_click">
+<span class="sig-name descname"><span class="pre">check_button_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.check_button_click" title="Ссылка на это определение"></a></dt>
+<dd><p>Проверяет, была ли нажата какая-либо кнопка управления.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – Координаты мыши (x, y)</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Идентификатор кнопки («RESTART» или «EXIT») или None</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.draw" title="Ссылка на это определение"></a></dt>
+<dd><p>Основной метод отрисовки, который вызывает все компоненты интерфейса.</p>
+<p>Порядок отрисовки:
+1. Игровая доска
+2. Шашки
+3. Статусная панель
+4. Боковая панель управления
+5. Экран окончания игры (если игра завершена)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.draw_board">
+<span class="sig-name descname"><span class="pre">draw_board</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.draw_board" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает игровую доску с клетками и подсветками.</p>
+<p>Рисует:
+1. Клетки доски в шахматном порядке с градиентами
+2. Подсветку шашек для обязательного взятия (красная пульсация)
+3. Подсветку допустимых ходов (зеленая пульсация)
+4. Подсветку выбранной шашки (золотая рамка)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.draw_game_over_screen">
+<span class="sig-name descname"><span class="pre">draw_game_over_screen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.draw_game_over_screen" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает экран окончания игры с информацией о победителе.</p>
+<p>Отображает:
+1. Затемненный фон поверх игры
+2. Окно с информацией о победителе
+3. Причину победы (время, шашки)
+4. Статистику игры
+5. Подсказки по управлению
+6. Автоматически сохраняет результат игры при первом показе</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.draw_gradient_rect">
+<span class="sig-name descname"><span class="pre">draw_gradient_rect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.draw_gradient_rect" title="Ссылка на это определение"></a></dt>
+<dd><p>Рисует прямоугольник с градиентной заливкой на экране.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rect</strong> – Объект pygame.Rect или кортеж (x, y, width, height)</p></li>
+<li><p><strong>color1</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – Начальный цвет градиента (RGB)</p></li>
+<li><p><strong>color2</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – Конечный цвет градиента (RGB)</p></li>
+<li><p><strong>vertical</strong> (<em>bool</em>) – Направление градиента (True - вертикальный)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.draw_panel">
+<span class="sig-name descname"><span class="pre">draw_panel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.draw_panel" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает правую боковую панель с управлением и информацией.</p>
+<p>Содержит:
+1. Таймеры игроков с подсветкой активного игрока
+2. Информацию о текущем ходе и счете шашек
+3. Список правил игры
+4. Кнопки управления (Новая игра, Выход)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.draw_pieces">
+<span class="sig-name descname"><span class="pre">draw_pieces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.draw_pieces" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает все шашки на игровой доске.</p>
+<p>Использует метод draw() класса Piece для отрисовки каждой шашки
+с учетом ее типа (простая/дамка) и состояния (выделена/не выделена).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.draw_status_bar">
+<span class="sig-name descname"><span class="pre">draw_status_bar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.draw_status_bar" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает нижнюю статусную панель с информацией о ходе игры.</p>
+<p>Отображает:
+1. Текущее состояние игры (ожидание хода, обязательное взятие, конец игры)
+2. Причину окончания игры (время, шашки)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.get_board_position">
+<span class="sig-name descname"><span class="pre">get_board_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.get_board_position" title="Ссылка на это определение"></a></dt>
+<dd><p>Преобразует координаты мыши в позицию на игровой доске.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – Координаты мыши (x, y)</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Позиция на доске (ряд, столбец) или None</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.restart_game">
+<span class="sig-name descname"><span class="pre">restart_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.restart_game" title="Ссылка на это определение"></a></dt>
+<dd><p>Перезапускает игру, создавая новый экземпляр CheckersGame.</p>
+<p>Сбрасывает все игровые состояния, таймеры и флаги сохранения.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.graphics.CheckersGUI.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.graphics.CheckersGUI.run" title="Ссылка на это определение"></a></dt>
+<dd><p>Основной игровой цикл, обрабатывающий события и обновляющий экран.</p>
+<p>Цикл:
+1. Обрабатывает события PyGame (клики, клавиши, закрытие)
+2. Обновляет игровой таймер
+3. Отрисовывает интерфейс
+4. Поддерживает стабильный FPS</p>
+<p>Выход из цикла происходит при закрытии окна или нажатии ESC.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="game_logic.html" class="btn btn-neutral float-left" title="Модуль game_logic" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+        <a href="models.html" class="btn btn-neutral float-right" title="Модуль models" accesskey="n" rel="next">Следующая <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2025, Команда разработчиков: Матвеев, Мисюченко, Жданова, Овчинникова, Бубнов. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

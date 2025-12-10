@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Модуль game_logic &mdash; документация Шашки на PyGame 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e35015f7"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=cd1d70c9"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Модуль graphics" href="graphics.html" />
+    <link rel="prev" title="Модуль enums" href="enums.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Шашки на PyGame
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Модули проекта:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Модуль constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Модуль database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enums.html">Модуль enums</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Модуль game_logic</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#src.game_logic.CheckersGame"><code class="docutils literal notranslate"><span class="pre">CheckersGame</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.board"><code class="docutils literal notranslate"><span class="pre">CheckersGame.board</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.current_player"><code class="docutils literal notranslate"><span class="pre">CheckersGame.current_player</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.selected_piece"><code class="docutils literal notranslate"><span class="pre">CheckersGame.selected_piece</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.valid_moves"><code class="docutils literal notranslate"><span class="pre">CheckersGame.valid_moves</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.game_over"><code class="docutils literal notranslate"><span class="pre">CheckersGame.game_over</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.winner"><code class="docutils literal notranslate"><span class="pre">CheckersGame.winner</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.white_time"><code class="docutils literal notranslate"><span class="pre">CheckersGame.white_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.black_time"><code class="docutils literal notranslate"><span class="pre">CheckersGame.black_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.last_time_update"><code class="docutils literal notranslate"><span class="pre">CheckersGame.last_time_update</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.multiple_capture"><code class="docutils literal notranslate"><span class="pre">CheckersGame.multiple_capture</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.captured_pieces_to_highlight"><code class="docutils literal notranslate"><span class="pre">CheckersGame.captured_pieces_to_highlight</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.move_history"><code class="docutils literal notranslate"><span class="pre">CheckersGame.move_history</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.game_start_time"><code class="docutils literal notranslate"><span class="pre">CheckersGame.game_start_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.game_saved"><code class="docutils literal notranslate"><span class="pre">CheckersGame.game_saved</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.check_game_over"><code class="docutils literal notranslate"><span class="pre">CheckersGame.check_game_over()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.format_time"><code class="docutils literal notranslate"><span class="pre">CheckersGame.format_time()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.get_all_possible_captures"><code class="docutils literal notranslate"><span class="pre">CheckersGame.get_all_possible_captures()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.get_captures_for_piece"><code class="docutils literal notranslate"><span class="pre">CheckersGame.get_captures_for_piece()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.get_piece"><code class="docutils literal notranslate"><span class="pre">CheckersGame.get_piece()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.get_simple_moves_for_piece"><code class="docutils literal notranslate"><span class="pre">CheckersGame.get_simple_moves_for_piece()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.get_valid_moves"><code class="docutils literal notranslate"><span class="pre">CheckersGame.get_valid_moves()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.handle_click"><code class="docutils literal notranslate"><span class="pre">CheckersGame.handle_click()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.move_piece"><code class="docutils literal notranslate"><span class="pre">CheckersGame.move_piece()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.save_game_result"><code class="docutils literal notranslate"><span class="pre">CheckersGame.save_game_result()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.setup_board"><code class="docutils literal notranslate"><span class="pre">CheckersGame.setup_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.game_logic.CheckersGame.update_timer"><code class="docutils literal notranslate"><span class="pre">CheckersGame.update_timer()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Модуль graphics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Модуль models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Модуль utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Шашки на PyGame</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Модуль game_logic</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/game_logic.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.game_logic">
+<span id="game-logic"></span><h1>Модуль game_logic<a class="headerlink" href="#module-src.game_logic" title="Ссылка на этот заголовок"></a></h1>
+<p>Модуль для логики игры в шашки.</p>
+<p>Содержит основной класс CheckersGame, реализующий правила русских шашек.
+Обеспечивает игровую логику, проверку ходов, управление временем и определение победителя.</p>
+<dl class="simple">
+<dt>Основные возможности:</dt><dd><ol class="arabic simple">
+<li><p>Полная реализация правил русских шашек</p></li>
+<li><p>Обязательное взятие шашек противника</p></li>
+<li><p>Множественное взятие (несколько шашек за один ход)</p></li>
+<li><p>Превращение в дамку при достижении противоположного края</p></li>
+<li><p>Таймер на 7 минут для каждого игрока</p></li>
+<li><p>Автоматическое сохранение результатов в базу данных</p></li>
+<li><p>Подсветка обязательных взятий</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.game_logic.</span></span><span class="sig-name descname"><span class="pre">CheckersGame</span></span><a class="headerlink" href="#src.game_logic.CheckersGame" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Основной класс, управляющий логикой игры в шашки.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.board">
+<span class="sig-name descname"><span class="pre">board</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.board" title="Ссылка на это определение"></a></dt>
+<dd><p>Игровая доска 8x8</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[List[Optional[<a class="reference internal" href="models.html#src.models.Piece" title="src.models.Piece">Piece</a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.current_player">
+<span class="sig-name descname"><span class="pre">current_player</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.current_player" title="Ссылка на это определение"></a></dt>
+<dd><p>Текущий игрок (WHITE или BLACK)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="enums.html#src.enums.Player" title="src.enums.Player">Player</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.selected_piece">
+<span class="sig-name descname"><span class="pre">selected_piece</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.selected_piece" title="Ссылка на это определение"></a></dt>
+<dd><p>Выбранная шашка (ряд, столбец)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.valid_moves">
+<span class="sig-name descname"><span class="pre">valid_moves</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.valid_moves" title="Ссылка на это определение"></a></dt>
+<dd><p>Допустимые ходы для выбранной шашки</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.game_over">
+<span class="sig-name descname"><span class="pre">game_over</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.game_over" title="Ссылка на это определение"></a></dt>
+<dd><p>Флаг окончания игры</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.winner">
+<span class="sig-name descname"><span class="pre">winner</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.winner" title="Ссылка на это определение"></a></dt>
+<dd><p>Победитель игры</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="enums.html#src.enums.Player" title="src.enums.Player">Player</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.white_time">
+<span class="sig-name descname"><span class="pre">white_time</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.white_time" title="Ссылка на это определение"></a></dt>
+<dd><p>Оставшееся время белых в секундах</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.black_time">
+<span class="sig-name descname"><span class="pre">black_time</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.black_time" title="Ссылка на это определение"></a></dt>
+<dd><p>Оставшееся время черных в секундах</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.last_time_update">
+<span class="sig-name descname"><span class="pre">last_time_update</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.last_time_update" title="Ссылка на это определение"></a></dt>
+<dd><p>Время последнего обновления таймера</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.multiple_capture">
+<span class="sig-name descname"><span class="pre">multiple_capture</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.multiple_capture" title="Ссылка на это определение"></a></dt>
+<dd><p>Флаг множественного взятия</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.captured_pieces_to_highlight">
+<span class="sig-name descname"><span class="pre">captured_pieces_to_highlight</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.captured_pieces_to_highlight" title="Ссылка на это определение"></a></dt>
+<dd><p>Шашки для подсветки</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.move_history">
+<span class="sig-name descname"><span class="pre">move_history</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.move_history" title="Ссылка на это определение"></a></dt>
+<dd><p>История всех ходов</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.game_start_time">
+<span class="sig-name descname"><span class="pre">game_start_time</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.game_start_time" title="Ссылка на это определение"></a></dt>
+<dd><p>Время начала игры</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.game_saved">
+<span class="sig-name descname"><span class="pre">game_saved</span></span><a class="headerlink" href="#src.game_logic.CheckersGame.game_saved" title="Ссылка на это определение"></a></dt>
+<dd><p>Флаг сохранения результата игры</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.check_game_over">
+<span class="sig-name descname"><span class="pre">check_game_over</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.check_game_over" title="Ссылка на это определение"></a></dt>
+<dd><p>Проверяет условия окончания игры и определяет победителя.</p>
+<p>Игра заканчивается если:
+1. У одного из игроков не осталось шашек
+2. У текущего игрока нет допустимых ходов
+3. Время одного из игроков истекло (проверяется в update_timer)</p>
+<p>Автоматически сохраняет результат игры при завершении.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.format_time">
+<span class="sig-name descname"><span class="pre">format_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.format_time" title="Ссылка на это определение"></a></dt>
+<dd><p>Форматирует время в секундах в строку формата MM:SS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seconds</strong> (<em>float</em>) – Время в секундах</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Отформатированное время (например, «05:30»)</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.get_all_possible_captures">
+<span class="sig-name descname"><span class="pre">get_all_possible_captures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="enums.html#src.enums.Player" title="src.enums.Player"><span class="pre">Player</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.get_all_possible_captures" title="Ссылка на это определение"></a></dt>
+<dd><p>Находит все возможные взятия для всех шашек указанного игрока.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>player</strong> (<a class="reference internal" href="enums.html#src.enums.Player" title="src.enums.Player"><em>Player</em></a>) – Игрок (WHITE или BLACK)</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Список всех возможных взятий в формате</dt><dd><p>(from_row, from_col, to_row, to_col, captured)</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.get_captures_for_piece">
+<span class="sig-name descname"><span class="pre">get_captures_for_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">piece</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#src.models.Piece" title="src.models.Piece"><span class="pre">Piece</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">captured_so_far</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visited</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.get_captures_for_piece" title="Ссылка на это определение"></a></dt>
+<dd><p>Находит все возможные взятия для конкретной шашки с рекурсией для множественного взятия.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Ряд шашки</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Столбец шашки</p></li>
+<li><p><strong>piece</strong> (<a class="reference internal" href="models.html#src.models.Piece" title="src.models.Piece"><em>Piece</em></a>) – Объект шашки</p></li>
+<li><p><strong>captured_so_far</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – Уже взятые шашки в этом ходе</p></li>
+<li><p><strong>visited</strong> (<em>set</em>) – Посещенные состояния для предотвращения циклов</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Список возможных взятий в формате (target_row, target_col, captured)</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.get_piece">
+<span class="sig-name descname"><span class="pre">get_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.get_piece" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает шашку на указанной позиции доски.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Номер ряда (0-7)</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Номер столбца (0-7)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Шашка на позиции или None, если клетка пуста</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="models.html#src.models.Piece" title="src.models.Piece">Piece</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.get_simple_moves_for_piece">
+<span class="sig-name descname"><span class="pre">get_simple_moves_for_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">piece</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#src.models.Piece" title="src.models.Piece"><span class="pre">Piece</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.get_simple_moves_for_piece" title="Ссылка на это определение"></a></dt>
+<dd><p>Получает простые ходы для шашки (без взятия).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Ряд шашки</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Столбец шашки</p></li>
+<li><p><strong>piece</strong> (<a class="reference internal" href="models.html#src.models.Piece" title="src.models.Piece"><em>Piece</em></a>) – Объект шашки</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Список возможных позиций для хода</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.get_valid_moves">
+<span class="sig-name descname"><span class="pre">get_valid_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.get_valid_moves" title="Ссылка на это определение"></a></dt>
+<dd><p>Получает допустимые ходы для выбранной шашки с учетом правил обязательного взятия.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Ряд шашки</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Столбец шашки</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Список допустимых ходов в формате (target_row, target_col, captured)</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.handle_click">
+<span class="sig-name descname"><span class="pre">handle_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.handle_click" title="Ссылка на это определение"></a></dt>
+<dd><p>Обрабатывает клик мыши на игровой доске.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Ряд клетки</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Столбец клетки</p></li>
+</ul>
+</dd>
+</dl>
+<p>Логика обработки:
+1. Если игра окончена - игнорирует клик
+2. Если шашка выбрана - пытается сделать ход
+3. Если шашка не выбрана - выбирает шашку текущего игрока
+4. Учитывает правила обязательного взятия</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.move_piece">
+<span class="sig-name descname"><span class="pre">move_piece</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.move_piece" title="Ссылка на это определение"></a></dt>
+<dd><p>Перемещает шашку на указанную позицию, выполняя взятия если необходимо.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_row</strong> (<em>int</em>) – Исходный ряд</p></li>
+<li><p><strong>from_col</strong> (<em>int</em>) – Исходный столбец</p></li>
+<li><p><strong>to_row</strong> (<em>int</em>) – Целевой ряд</p></li>
+<li><p><strong>to_col</strong> (<em>int</em>) – Целевой столбец</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>True если ход выполнен успешно, False в противном случае</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.save_game_result">
+<span class="sig-name descname"><span class="pre">save_game_result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.save_game_result" title="Ссылка на это определение"></a></dt>
+<dd><p>Сохраняет результат игры в базу данных.</p>
+<p>Собирает статистику игры и сохраняет ее через DatabaseManager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Результат<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True если сохранение успешно, False в противном случае</p>
+</dd>
+<dt class="field-even">Тип результата<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.setup_board">
+<span class="sig-name descname"><span class="pre">setup_board</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.setup_board" title="Ссылка на это определение"></a></dt>
+<dd><p>Расставляет шашки на доске в начальные позиции согласно правилам русских шашек.</p>
+<p>Черные шашки занимают первые 3 ряда (0-2), белые - последние 3 ряда (5-7).
+Шашки размещаются только на темных клетках ((row + col) % 2 == 1).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.game_logic.CheckersGame.update_timer">
+<span class="sig-name descname"><span class="pre">update_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.game_logic.CheckersGame.update_timer" title="Ссылка на это определение"></a></dt>
+<dd><p>Обновляет таймеры игроков на основе прошедшего времени.</p>
+<p>Уменьшает время текущего игрока. Если время истекает,
+завершает игру и сохраняет результат.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="enums.html" class="btn btn-neutral float-left" title="Модуль enums" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+        <a href="graphics.html" class="btn btn-neutral float-right" title="Модуль graphics" accesskey="n" rel="next">Следующая <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2025, Команда разработчиков: Матвеев, Мисюченко, Жданова, Овчинникова, Бубнов. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
