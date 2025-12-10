@@ -68,19 +68,20 @@ class CheckersGUI:
 
         # Загружаем шрифты
         try:
-            self.font_large = pygame.font.Font(None, 48)
-            self.font_medium = pygame.font.Font(None, 32)
-            self.font_small = pygame.font.Font(None, 24)
-            self.font_tiny = pygame.font.Font(None, 18)
+            self.font_large = pygame.font.Font(None, 48)  # для заголовков
+            self.font_medium = pygame.font.Font(None, 32)  # для основного текста
+            self.font_small = pygame.font.Font(None, 24)  # для мелкого текста
+            self.font_tiny = pygame.font.Font(None, 18)  # для очень мелкого текста
         except:
+            # если шрифт по умолчанию не доступен, используем системный Arial
             self.font_large = pygame.font.SysFont('arial', 48, bold=True)
             self.font_medium = pygame.font.SysFont('arial', 32)
             self.font_small = pygame.font.SysFont('arial', 24)
             self.font_tiny = pygame.font.SysFont('arial', 18)
 
-        # Эффекты
-        self.pulse_value = 0
-        self.last_pulse_time = 0
+            # переменные для анимационных эффектов
+        self.pulse_value = 0  # текущее значение для пульсации
+        self.last_pulse_time = 0  # время последней пульсации
 
     def draw_gradient_rect(self, rect, color1, color2, vertical=True):
         """Рисует прямоугольник с градиентной заливкой на экране.
