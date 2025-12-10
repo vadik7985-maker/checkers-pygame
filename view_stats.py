@@ -62,7 +62,7 @@ def view_statistics():
 
     print("Статистика побед:")
     print("-" * 50)
-    for winner, data in stats.items():
+    for winner, data in stats.items(): # словарь со статистикой
         print(f"\nПобедитель: {winner}")
         print(f"  Всего игр: {data['total_games']}")
         print(f"  Среднее осталось белых шашек: {data['avg_white_pieces']:.1f}")

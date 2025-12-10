@@ -16,11 +16,10 @@
     - python-dotenv: загрузка переменных окружения из .env файла
 """
 
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from typing import Optional, Dict, Any
-import os
-from dotenv import load_dotenv
+import psycopg2 # импорт драйвера для работы с бд
+from psycopg2.extras import RealDictCursor # возвращает словари вместо кортежей
+from typing import Optional, Dict
+from dotenv import load_dotenv # загрузка енв файлов
 import os
 
 
@@ -41,8 +40,8 @@ class DatabaseManager:
         Создает пустые атрибуты для соединения и курсора.
         Фактическое подключение происходит при вызове метода connect().
         """
-        self.connection = None
-        self.cursor = None
+        self.connection = None # для хранения соединения с бд
+        self.cursor = None # для хранения курсора
 
     def connect(self):
         """Устанавливает подключение к базе данных PostgreSQL.
@@ -73,14 +72,14 @@ class DatabaseManager:
                     print(f"Загружен .env из: {env_path}")
                     break
 
-            db_host = os.getenv('DB_HOST', 'localhost')
+            db_host = os.getenv('DB_HOST', 'localhost') # получаем значи из переменных окружения
             db_port = os.getenv('DB_PORT', '5432')
             db_name = os.getenv('DB_NAME', 'checkers_db')
             db_user = os.getenv('DB_USER', 'postgres')
             db_password = os.getenv('DB_PASSWORD', 'password')  # Убрали декодирование
 
-            self.connection = psycopg2.connect(
-                host=db_host,
+            self.connection = psycopg2.connect( # устанав соед
+                host=db_host, # передаем значения
                 port=db_port,
                 database=db_name,
                 user=db_user,
@@ -133,13 +132,13 @@ class DatabaseManager:
             );
             """
 
-            self.cursor.execute(create_table_query)
+            self.cursor.execute(create_table_query) # запрос создания таблиц
             self.connection.commit()
             print("Таблицы успешно созданы")
 
         except Exception as e:
             print(f"Ошибка при создании таблиц: {e}")
-            self.connection.rollback()
+            self.connection.rollback() # отменяем изменения
 
     def save_game_result(self, winner: str, white_pieces: int, black_pieces: int,
                          white_time: float, black_time: float, total_moves: int = 0,
@@ -177,7 +176,7 @@ class DatabaseManager:
             RETURNING id;
             """
 
-            self.cursor.execute(insert_query, (
+            self.cursor.execute(insert_query, ( # скл запрос с параметрами
                 winner,
                 white_pieces,
                 black_pieces,
@@ -221,8 +220,8 @@ class DatabaseManager:
             LIMIT %s;
             """
 
-            self.cursor.execute(query, (limit,))
-            return self.cursor.fetchall()
+            self.cursor.execute(query, (limit,)) # вып запрос
+            return self.cursor.fetchall() # возваращем все записи
 
         except Exception as e:
             print(f"Ошибка при получении статистики: {e}")
@@ -259,11 +258,11 @@ class DatabaseManager:
             """
 
             self.cursor.execute(query)
-            results = self.cursor.fetchall()
+            results = self.cursor.fetchall() # получаем все записи по запросу
 
             stats = {}
             for row in results:
-                stats[row['winner']] = dict(row)
+                stats[row['winner']] = dict(row) # ключ победитель, значение - вся строка как словарь
 
             return stats
 
