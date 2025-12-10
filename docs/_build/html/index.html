@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Алфавитный указатель" href="genindex.html" />
     <link rel="search" title="Поиск" href="search.html" />
-    <link rel="next" title="Модуль checkers-pygame" href="src.html" /> 
+    <link rel="next" title="Модуль constants" href="constants.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,9 +42,15 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
-              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Модули проекта:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src.html">Модуль checkers-pygame</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Модуль constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Модуль database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enums.html">Модуль enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="game_logic.html">Модуль game_logic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Модуль graphics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Модуль models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Модуль utils</a></li>
 </ul>
 
         </div>
@@ -74,10 +80,50 @@
   <section id="pygame">
 <h1>Документация игры «Шашки на PyGame»<a class="headerlink" href="#pygame" title="Ссылка на этот заголовок"></a></h1>
 <p>Добро пожаловать в документацию игры «Шашки на PyGame»!</p>
+<p>Это реализация игры в русские шашки
+с графическим интерфейсом на PyGame и сохранением
+статистики в базе данных PostgreSQL.</p>
+<p><strong>Основные возможности:</strong>
+- Полные правила русских шашек
+- Графический интерфейс с анимациями
+- Таймер на 7 минут для каждого игрока
+- Автосохранение результатов в PostgreSQL
+- Подсветка обязательных взятий
+- Множественное взятие шашек</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Модули проекта:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src.html">Модуль checkers-pygame</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Модуль constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Модуль database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="database.html#src.database.DatabaseManager"><code class="docutils literal notranslate"><span class="pre">DatabaseManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="enums.html">Модуль enums</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#src.enums.PieceType"><code class="docutils literal notranslate"><span class="pre">PieceType</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#src.enums.Player"><code class="docutils literal notranslate"><span class="pre">Player</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="game_logic.html">Модуль game_logic</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="game_logic.html#src.game_logic.CheckersGame"><code class="docutils literal notranslate"><span class="pre">CheckersGame</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Модуль graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#src.graphics.CheckersGUI"><code class="docutils literal notranslate"><span class="pre">CheckersGUI</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Модуль models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models.html#src.models.GameState"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#src.models.Move"><code class="docutils literal notranslate"><span class="pre">Move</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#src.models.Piece"><code class="docutils literal notranslate"><span class="pre">Piece</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Модуль utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#src.utils.create_gradient_surface"><code class="docutils literal notranslate"><span class="pre">create_gradient_surface()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#src.utils.create_window_icon"><code class="docutils literal notranslate"><span class="pre">create_window_icon()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#src.utils.draw_text_with_shadow"><code class="docutils literal notranslate"><span class="pre">draw_text_with_shadow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#src.utils.load_fonts"><code class="docutils literal notranslate"><span class="pre">load_fonts()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -86,7 +132,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
-        <a href="src.html" class="btn btn-neutral float-right" title="Модуль checkers-pygame" accesskey="n" rel="next">Следующая <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="constants.html" class="btn btn-neutral float-right" title="Модуль constants" accesskey="n" rel="next">Следующая <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
