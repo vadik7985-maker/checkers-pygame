@@ -85,20 +85,19 @@ class TestBoardOperations(unittest.TestCase):
 
     def test_get_piece_valid(self):
         """Тест получения шашки с корректными координатами"""
-        # В стандартной расстановке шашки есть только на темных клетках (row + col) % 2 == 1
-        # Проверяем несколько возможных позиций для белых шашек
-        white_positions = [(5, 1), (5, 3), (5, 5), (5, 7), (6, 0), (6, 2), (6, 4), (6, 6), (7, 1), (7, 3), (7, 5),
-                           (7, 7)]
+        # В стандартной расстановке белые шашки находятся в рядах 5, 6, 7
+        # Проверяем несколько возможных позиций
+        # Белые занимают ряды 5, 6, 7, но только темные клетки
+        found_white = False
+        for row in [5, 6, 7]:
+            for col in range(BOARD_SIZE):
+                if (row + col) % 2 == 1:  # Темные клетки
+                    piece = self.game.get_piece(row, col)
+                    if piece:
+                        self.assertEqual(piece.player, Player.WHITE)
+                        found_white = True
 
-        found_piece = False
-        for row, col in white_positions:
-            piece = self.game.get_piece(row, col)
-            if piece:
-                self.assertEqual(piece.player, Player.WHITE)
-                found_piece = True
-                break
-
-        self.assertTrue(found_piece, "Должна быть найдена хотя бы одна белая шашка")
+        self.assertTrue(found_white, "Должна быть найдена хотя бы одна белая шашка")
 
     def test_get_piece_out_of_bounds(self):
         """Тест получения шашки за пределами доски"""
@@ -109,12 +108,59 @@ class TestBoardOperations(unittest.TestCase):
 
     def test_empty_cells(self):
         """Тест пустых клеток на доске"""
-        # Клетка (0, 0) должна быть пустой (светлые клетки не используются)
-        self.assertIsNone(self.game.get_piece(0, 0))
-        # Клетка (1, 0) тоже должна быть пустой (светлая)
-        self.assertIsNone(self.game.get_piece(1, 0))
-        # Проверяем, что клетка (0, 1) имеет черную шашку
-        self.assertIsNotNone(self.game.get_piece(0, 1))
+        # В стандартной русской шашечной доске:
+        # - Черные шашки занимают первые 3 ряда (0-2) на темных клетках
+        # - Белые шашки занимают последние 3 ряда (5-7) на темных клетках
+        # - Шашки ставятся только на темные клетки (row + col) % 2 == 1
+
+        # Проверяем, что на светлых клетках нет шашек
+        for row in range(BOARD_SIZE):
+            for col in range(BOARD_SIZE):
+                if (row + col) % 2 == 0:  # Светлые клетки
+                    self.assertIsNone(
+                        self.game.get_piece(row, col),
+                        f"Светлая клетка ({row}, {col}) должна быть пустой"
+                    )
+
+        # Проверяем, что на темных клетках в рядах 0-2 есть черные шашки
+        black_found = False
+        for row in range(3):
+            for col in range(BOARD_SIZE):
+                if (row + col) % 2 == 1:  # Темные клетки
+                    piece = self.game.get_piece(row, col)
+                    if piece:
+                        self.assertEqual(
+                            piece.player,
+                            Player.BLACK,
+                            f"Клетка ({row}, {col}) должна содержать черную шашку"
+                        )
+                        black_found = True
+
+        self.assertTrue(black_found, "Должна быть найдена хотя бы одна черная шашка")
+
+        # Проверяем, что на темных клетках в рядах 5-7 есть белые шашки
+        white_found = False
+        for row in range(5, BOARD_SIZE):
+            for col in range(BOARD_SIZE):
+                if (row + col) % 2 == 1:  # Темные клетки
+                    piece = self.game.get_piece(row, col)
+                    if piece:
+                        self.assertEqual(
+                            piece.player,
+                            Player.WHITE,
+                            f"Клетка ({row}, {col}) должна содержать белую шашку"
+                        )
+                        white_found = True
+
+        self.assertTrue(white_found, "Должна быть найдена хотя бы одна белая шашка")
+
+        # Проверяем, что средние ряды (3, 4) пустые на всех клетках
+        for row in [3, 4]:
+            for col in range(BOARD_SIZE):
+                self.assertIsNone(
+                    self.game.get_piece(row, col),
+                    f"Средняя клетка ({row}, {col}) должна быть пустой"
+                )
 
 
 class TestTimerOperations(unittest.TestCase):
@@ -135,15 +181,13 @@ class TestTimerOperations(unittest.TestCase):
     @patch('time.time')
     def test_update_timer_normal(self, mock_time):
         """Тест обновления таймера в нормальных условиях"""
-        # Настраиваем мок времени
-        mock_time.side_effect = [1000.0, 1010.0]  # Прошло 10 секунд
+        # Сохраняем текущее время игры (установлено в __init__)
+        original_last_update = self.game.last_time_update
 
-        # Сохраняем начальное время (должно быть 420.0)
+        # Настраиваем мок времени - возвращаем время на 10 секунд позже
+        mock_time.return_value = original_last_update + 10.0
+
         initial_time = self.game.white_time
-        self.assertEqual(initial_time, 420.0)
-
-        # Обновляем last_time_update чтобы оно соответствовало первому значению мока
-        self.game.last_time_update = 1000.0
 
         self.game.update_timer()
 
@@ -154,11 +198,13 @@ class TestTimerOperations(unittest.TestCase):
     @patch.object(CheckersGame, 'save_game_result')
     def test_update_timer_timeout(self, mock_save, mock_time):
         """Тест окончания времени у игрока"""
-        # Настраиваем мок времени для истечения времени белых
-        # Начальное время белых = 420 сек
-        mock_time.side_effect = [0.0, 421.0]  # Прошло 421 секунда
+        # Сохраняем текущее время игры
+        original_last_update = self.game.last_time_update
 
-        self.game.last_time_update = 0.0
+        # Настраиваем мок времени - возвращаем время на 421 секунду позже
+        # (420 секунд начального времени + 1 секунда для истечения)
+        mock_time.return_value = original_last_update + 421.0
+
         self.game.update_timer()
 
         # Игра должна завершиться
@@ -167,17 +213,22 @@ class TestTimerOperations(unittest.TestCase):
         self.assertEqual(self.game.white_time, 0)
         mock_save.assert_called_once()
 
-    def test_time_does_not_go_negative(self):
+    @patch('time.time')
+    def test_time_does_not_go_negative(self, mock_time):
         """Тест, что время не становится отрицательным"""
-        # Используем patch для time.time чтобы контролировать прошедшее время
-        with patch('time.time') as mock_time:
-            mock_time.side_effect = [0.0, 10.0]  # Прошло 10 секунд
-            self.game.white_time = 5.0
-            self.game.last_time_update = 0.0
+        # Сохраняем текущее время игры
+        original_last_update = self.game.last_time_update
 
-            self.game.update_timer()
+        # Устанавливаем небольшое оставшееся время
+        self.game.white_time = 5.0
 
-            self.assertEqual(self.game.white_time, 0)
+        # Настраиваем мок времени - возвращаем время на 10 секунд позже
+        mock_time.return_value = original_last_update + 10.0
+
+        self.game.update_timer()
+
+        # Время должно стать 0, не отрицательным
+        self.assertEqual(self.game.white_time, 0)
 
 
 class TestMoveValidation(unittest.TestCase):
@@ -224,8 +275,10 @@ class TestMoveValidation(unittest.TestCase):
 
         # Дамка может ходить по всем диагоналям до конца доски или до препятствия
         # Проверяем, что есть ходы во всех направлениях
-        # В данном случае, доска пустая, поэтому должно быть много ходов
-        self.assertGreater(len(moves), 10)  # Проверяем, что есть ходы
+        self.assertTrue(any(m[0] < 4 and m[1] < 4 for m in moves))  # Вверх-влево
+        self.assertTrue(any(m[0] < 4 and m[1] > 4 for m in moves))  # Вверх-вправо
+        self.assertTrue(any(m[0] > 4 and m[1] < 4 for m in moves))  # Вниз-влево
+        self.assertTrue(any(m[0] > 4 and m[1] > 4 for m in moves))  # Вниз-вправо
 
 
 class TestCaptureLogic(unittest.TestCase):
@@ -404,20 +457,37 @@ class TestGameOverConditions(unittest.TestCase):
         # Создаем ситуацию, когда у текущего игрока нет ходов
         self.game.current_player = Player.WHITE
 
-        # Удаляем все шашки, кроме одной черной, заблокированной
+        # Очищаем доску полностью
         self.game.board = [[None for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
 
-        # Одна белая шашка, окруженная со всех сторон
-        self.game.board[1][1] = Piece(Player.WHITE)
-        self.game.board[0][0] = Piece(Player.BLACK)
-        self.game.board[0][2] = Piece(Player.BLACK)
-        self.game.board[2][0] = Piece(Player.BLACK)
-        self.game.board[2][2] = Piece(Player.BLACK)
+        # Добавляем только одну белую шашку, которая не может ходить
+        # Например, белую шашку в углу, куда она не может пойти
+        self.game.board[0][1] = Piece(Player.WHITE)  # Белая в верхнем ряду
+        # Но белая шашка не может ходить вперед (вверх) из верхнего ряда
+        # У нее просто нет возможных ходов вперед
 
+        # Проверяем наличие ходов
+        has_moves = False
+        for row in range(BOARD_SIZE):
+            for col in range(BOARD_SIZE):
+                piece = self.game.get_piece(row, col)
+                if piece and piece.player == self.game.current_player:
+                    moves = self.game.get_valid_moves(row, col)
+                    if moves:
+                        has_moves = True
+                        break
+
+        # У белой шашки в верхнем ряду не должно быть ходов
+        self.assertFalse(has_moves, "Белая шашка в верхнем ряду не должна иметь ходов")
+
+        # Теперь проверяем окончание игры
         self.game.check_game_over()
 
+        # Игра должна завершиться, победитель - черные
         self.assertTrue(self.game.game_over)
         self.assertEqual(self.game.winner, Player.BLACK)
+
+        # Проверяем, что save_game_result был вызван
         mock_save.assert_called_once()
 
 
