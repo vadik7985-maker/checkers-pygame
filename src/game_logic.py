@@ -49,20 +49,20 @@ class CheckersGame:
         и настраивает начальное состояние игры.
         """
         self.board = [[None for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
-        self.current_player = Player.WHITE
-        self.selected_piece = None
-        self.valid_moves = []
-        self.game_over = False
-        self.winner = None
-        self.white_time = INITIAL_TIME_SECONDS
-        self.black_time = INITIAL_TIME_SECONDS
-        self.last_time_update = time.time()
-        self.multiple_capture = False
-        self.captured_pieces_to_highlight = []
-        self.setup_board()
-        self.move_history = []
-        self.game_start_time = time.time()  # Время начала игры для статистики
-        self.game_saved = False  # Флаг, что игра уже сохранена
+        self.current_player = Player.WHITE  # белые ходят первыми
+        self.selected_piece = None  # пока нет выбранной шашки
+        self.valid_moves = []  # допустимые ходы
+        self.game_over = False  # игра не окончена
+        self.winner = None  # победитель еще не определен
+        self.white_time = INITIAL_TIME_SECONDS  # начальное время белых
+        self.black_time = INITIAL_TIME_SECONDS  # начальное время черных
+        self.last_time_update = time.time()  # время последнего обновления таймера
+        self.multiple_capture = False  # нет множественного взятия
+        self.captured_pieces_to_highlight = []  # нет шашек для подсветки
+        self.setup_board()  # расстановка шашек на доске
+        self.move_history = []  # история ходов
+        self.game_start_time = time.time()  # время начала игры для статистики
+        self.game_saved = False  # игра еще не сохранена в БД
 
     def setup_board(self):
         """Расставляет шашки на доске в начальные позиции согласно правилам русских шашек.
