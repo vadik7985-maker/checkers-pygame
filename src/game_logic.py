@@ -184,7 +184,7 @@ class CheckersGame:
             return captures
         visited.add(visited_key)
 
-        if piece.type == PieceType.KING:
+        if piece.type == PieceType.KING: # ход дамки
             directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
 
             for dr, dc in directions:
@@ -515,23 +515,23 @@ class CheckersGame:
             bool: True если сохранение успешно, False в противном случае
         """
         if not self.game_over or self.game_saved:
-            return False
+            return False # игра не окончена или уже сохранена
 
-        self.game_saved = True
+        self.game_saved = True # предотваращаем повторное сохранение
 
-        # Подсчитываем оставшиеся шашки
+        # Подсчитываем оставшиеся шашки и дамки
         white_pieces = 0
         black_pieces = 0
         white_queens = 0
         black_queens = 0
 
-        for row in range(BOARD_SIZE):
-            for col in range(BOARD_SIZE):
-                piece = self.get_piece(row, col)
+        for row in range(BOARD_SIZE): # смотрим ряды
+            for col in range(BOARD_SIZE): # смотрим столбцы
+                piece = self.get_piece(row, col) # получаем фигуру на текущей позиции
                 if piece:
-                    if piece.player == Player.WHITE:
+                    if piece.player == Player.WHITE: # белая шашка
                         white_pieces += 1
-                        if piece.type == PieceType.KING:
+                        if piece.type == PieceType.KING: # белая дамка
                             white_queens += 1
                     else:
                         black_pieces += 1
@@ -542,7 +542,7 @@ class CheckersGame:
         winner = "white" if self.winner == Player.WHITE else "black"
 
         # Подсчитываем общее количество ходов
-        total_moves = len(self.move_history)
+        total_moves = len(self.move_history) # равно длине списка истории ходов
 
         # Вычисляем продолжительность игры
         game_duration_seconds = time.time() - self.game_start_time
@@ -550,16 +550,16 @@ class CheckersGame:
 
         # Дополнительная информация
         additional_info = {
-            "white_queens": white_queens,
+            "white_queens": white_queens, # кол во дамок
             "black_queens": black_queens,
-            "total_captures": sum(len(move['captured']) for move in self.move_history),
+            "total_captures": sum(len(move['captured']) for move in self.move_history), # общее колво взятых шашек
             "game_duration_seconds": game_duration_seconds,
             "move_history_summary": [
                 {
-                    "from": move['from'],
-                    "to": move['to'],
-                    "captured_count": len(move['captured']),
-                    "piece_type": "king" if move['piece'].type == PieceType.KING else "man"
+                    "from": move['from'], # откуда ходили
+                    "to": move['to'], # куда
+                    "captured_count": len(move['captured']), # сколько шашек взяли
+                    "piece_type": "king" if move['piece'].type == PieceType.KING else "man" # тип фигуры
                 }
                 for move in self.move_history[-20:]  # Последние 20 ходов
             ]
@@ -569,7 +569,7 @@ class CheckersGame:
         try:
             result = db_manager.save_game_result(
                 winner=winner,
-                white_pieces=white_pieces,
+                white_pieces=white_pieces, # все что осталось и тд
                 black_pieces=black_pieces,
                 white_time=self.white_time,
                 black_time=self.black_time,
